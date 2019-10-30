@@ -10,4 +10,4 @@ instance/
 
 .idea
 
-./database/db
+/database/db
