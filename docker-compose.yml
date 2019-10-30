@@ -1,0 +1,17 @@
+version: '3.3'
+
+networks:
+  db:
+
+services:
+  mongodb:
+    image: mongo:4.2.0
+    container_name: "mongodb"
+    command: mongod
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./database/db:/data/db
+    networks:
+      - db
