@@ -33,7 +33,7 @@ def test():
 
 
 @app.route('/job', methods=['POST'])
-def post_job():
+def post_event():
     """
     Post a new job for the worker to execute.
     :param name: name of the model that will execute the job
