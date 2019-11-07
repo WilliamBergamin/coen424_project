@@ -9,15 +9,15 @@ class Order:
                             and the value an explanation of the attribute role.
     """
     swagger_types = {
-        'id': 'str',
+        '_id': 'str',
         'user_id': 'str',
         'machine_id': 'str',
         'state': 'str',
-        'drink': 'str'
+        'drink': 'str',
     }
 
     attribute_map = {
-        'id': 'ID pf the event',
+        '_id': 'ID pf the event',
         'user_id': 'ID of the user that has created the order',
         'machine_id': 'ID of the machine that will make the drink',
         'state': 'state of the order can be \'available\', \'processing\' or \'done\''
