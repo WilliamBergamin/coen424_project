@@ -40,7 +40,7 @@ class User():
         self.password = bcrypt.hashpw(password.encode('utf8'), salt)
         self.token = None
         self.orders = []
-        if bcrypt.checkpw(password.encode('utf8'),self.password):
+        if bcrypt.checkpw(password.encode('utf8'), self.password):
             print("true")
         else:
             print("false")
@@ -74,9 +74,20 @@ class User():
         else:
             self.token = None
 
+    def add_order(self, order):
+        query = {"_id": self._id, "orders": {"$ne": order._id}}
+        new_values = {
+            "$addToSet": {"orders": order._id}
+        }
+        updated_user = users.update_one(query, new_values)
+        if updated_user.modified_count > 0:
+            self.orders.append(order._id)
+
     @classmethod
     def find(cls, email):
         found_user = users.find_one({'email': email})
+        if found_user is None:
+            return None
         user = cls(found_user.get("name"),
                    found_user.get("email"),
                    "")
@@ -88,9 +99,7 @@ class User():
 
     @classmethod
     def find_by_token(cls, token):
-        app.logger.info(token)
         found_user = users.find_one({'token': token})
-        app.logger.info(found_user)
         if found_user is None:
             return None
         user = cls(found_user.get("name"),
@@ -110,9 +119,8 @@ class User():
 
     def to_dict(self):
         return {
-            '_id': str(self._id),
             'name': self.name,
             'email': self.email,
             'token': self.token,
-            'orders': self.orders,
+            'orders': [str(order) for order in self.orders],
         }

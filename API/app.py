@@ -5,8 +5,12 @@ from flask import request
 from flask_cors import CORS
 from flask import make_response
 from flask_httpauth import HTTPTokenAuth
+import base64
+
 from models.Event import Event
 from models.User import User
+from models.Order import Order
+from models.Drink import Drink
 
 from init import app, JSON_MIME_TYPE, mongo_db
 
@@ -37,7 +41,6 @@ def test():
 
 
 @app.route('/api/v1/event', methods=['POST'])
-@auth.login_required
 def post_event():
     """
     {
@@ -116,9 +119,50 @@ def get_user():
 def post_order():
     """
     header Authorization : Token the_user_token
+    {
+      "event_key": "y37jsnks",
+      "drinks": [{
+          "mixer_type": "coke",
+          "alcohol_type": "rhum",
+          "double": True
+      }],
+    }
+    """
+    if request.content_type != JSON_MIME_TYPE:
+        error = json.dumps({'error': 'Invalid Content Type'})
+        return json_response(error, 400)
+    app.logger.info("Request received")
+    data = request.json
+    event = Event.find(data.get('event_key'))
+    if event is None:
+        error = json.dumps({'error': 'Event not found'})
+        return json_response(error, 404)
+    drinks = [Drink(drink.get('mixer_type'),
+                    drink.get('alcohol_type'),
+                    drink.get('double')) for drink in data.get('drinks')]
+    # total_price = Order.get_price_from_drinks(drinks)
+    # TODO process transation, for now assume the trasaction always passes
+    new_order = Order(g.current_user._id, drinks, payed=True)
+    new_order.create()
+    event.add_new_order(new_order)
+    g.current_user.add_order(new_order)
+    return json_response(json.dumps(new_order.to_dict()), status=200)
+
+
+@app.route('/api/v1/user/event/<string:event_key>', methods=['POST'])
+@auth.login_required
+def post_user_to_event(event_key):
+    """
+    header Authorization : Token the_user_token
+    /api/v1/user/event/<string:event_key>
     """
     app.logger.info("Request received")
-    return json_response(json.dumps(g.current_user.to_dict()), status=200)
+    event = Event.find(event_key)
+    if event is None:
+        error = json.dumps({'error': 'Event not found'})
+        return json_response(error, 404)
+    event.add_user(g.current_user)
+    return json_response(json.dumps(event.to_dict()), status=200)
 
 
 def json_response(data='', status=200, headers=None):
