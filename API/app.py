@@ -3,11 +3,12 @@ from flask import g
 from flask import request
 from flask_cors import CORS
 from flask_httpauth import HTTPTokenAuth
-from pymongo import errors
 
 from models.Event import Event
 from models.User import User
 from models.User import User_Creation_Exception
+from models.Machine import Machine
+from models.Machine import Machine_Creation_Exception
 from models.Order import Order
 from models.Drink import Drink
 
@@ -22,9 +23,13 @@ auth = HTTPTokenAuth(scheme='Token')
 def verify_token(token):
     if token is None:
         return False
-    app.logger.info(token)
+    if token[:7] == "machine":
+        current_machine = Machine.find_by_token(token)
+        if current_machine:
+            g.current_machine = current_machine
+            return True
+        return False
     current_user = User.find_by_token(token)
-    app.logger.info(current_user)
     if current_user:
         g.current_user = current_user
         return True
@@ -50,9 +55,9 @@ def post_event():
     }
     """
     if request.content_type != JSON_MIME_TYPE:
+        app.logger.info('Invalid Content Type')
         error = json.dumps({'error': 'Invalid Content Type'})
         return json_response(error, 400)
-    app.logger.info("Request received")
     data = request.json
     new_event = Event(name=data['name'], location=data['location'])
     new_event.create()
@@ -69,18 +74,19 @@ def post_user():
     }
     """
     if request.content_type != JSON_MIME_TYPE:
+        app.logger.info('Invalid Content Type')
         error = json.dumps({'error': 'Invalid Content Type'})
         return json_response(error, 400)
-    app.logger.info("Request received")
     data = request.json
     new_user = User(name=data['name'],
                     email=data['email'],
                     password=data['password'])
     try:
         new_user.create()
-    except User_Creation_Exception as e:
-        error = json.dumps({'error': e.message})
-        return json_response(status=409)
+    except User_Creation_Exception:
+        app.logger.info('Email already used for existing user')
+        error = json.dumps({'error': "Email already used for existing user"})
+        return json_response(error, 409)
     return json_response(json.dumps(new_user.to_dict()), status=201)
 
 
@@ -93,13 +99,13 @@ def get_token():
     }
     """
     if request.content_type != JSON_MIME_TYPE:
+        app.logger.info('Invalid Content Type')
         error = json.dumps({'error': 'Invalid Content Type'})
         return json_response(error, 400)
-    app.logger.info("Request received")
     data = request.json
-    if not User.exist(data['email']):
-        return json_response(status=404)
     user = User.find(data['email'])
+    if user is None:
+        return json_response(status=404)
     user.get_token(data["password"])
     user.save()
     if user.token is None:
@@ -113,7 +119,9 @@ def get_user():
     """
     header WWW-Authenticate: Token realm="Authentication Required"
     """
-    app.logger.info("Request received")
+    if g.current_user is None:
+        app.logger.info('No user found might have been a machine token')
+        return json_response(status=401)
     return json_response(json.dumps(g.current_user.to_dict()), status=200)
 
 
@@ -132,9 +140,12 @@ def post_order():
     }
     """
     if request.content_type != JSON_MIME_TYPE:
+        app.logger.info('Invalid Content Type')
         error = json.dumps({'error': 'Invalid Content Type'})
         return json_response(error, 400)
-    app.logger.info("Request received")
+    if g.current_user is None:
+        app.logger.info('No user found might have been a machine token')
+        return json_response(status=401)
     data = request.json
     event = Event.find(data.get('event_key'))
     if event is None:
@@ -159,13 +170,71 @@ def post_user_to_event(event_key):
     header Authorization : Token the_user_token
     /api/v1/user/event/<string:event_key>
     """
-    app.logger.info("Request received")
+    if g.current_user is None:
+        app.logger.info('No user found might have been a machine token')
+        return json_response(status=401)
     event = Event.find(event_key)
     if event is None:
+        app.logger.info('Event not found')
         error = json.dumps({'error': 'Event not found'})
         return json_response(error, 404)
     event.add_user(g.current_user)
     return json_response(json.dumps(event.to_dict()), status=200)
+
+
+@app.route('/api/v1/machine', methods=['POST'])
+@auth.login_required
+def post_machine():
+    """
+    header Authorization : Token the_user_token
+    """
+    if g.current_user is None:
+        app.logger.info('No user found might have been a machine token')
+        return json_response(status=401)
+    new_machine = Machine()
+    try:
+        new_machine.create(g.current_user)
+    except Machine_Creation_Exception:
+        app.logger.info('User: '+str(g.current_user._id)+' unautherised for this creation action')
+        return json_response(status=401)
+    return json_response(json.dumps(new_machine.to_dict()), status=200)
+
+
+@app.route('/api/v1/machine/event/<string:event_key>', methods=['POST'])
+@auth.login_required
+def post_machine_to_event(event_key):
+    """
+    header Authorization : Token the_machine_token
+    /api/v1/user/event/<string:event_key>
+    """
+    if g.current_machine is None:
+        app.logger.info('No machine found might have been a user token')
+        return json_response(status=401)
+    event = Event.find(event_key)
+    if event is None:
+        app.logger.info('Event not found')
+        error = json.dumps({'error': 'Event not found'})
+        return json_response(error, 404)
+    event.add_machine(g.current_machine)
+    return json_response(json.dumps(event.to_dict()), status=200)
+
+
+@app.route('/api/v1/machine/order/<string:order_key>', methods=['POST'])
+@auth.login_required
+def machine_get_order():
+    """
+    header Authorization : Token the_machine_token
+    """
+    if g.current_machine is None:
+        app.logger.info('No machine found might have been a user token')
+        return json_response(status=401)
+    new_machine = Machine()
+    try:
+        new_machine.create(g.current_user)
+    except Machine_Creation_Exception:
+        app.logger.info('User: '+str(g.current_user._id)+' unautherised for this creation action')
+        return json_response(status=401)
+    return json_response(json.dumps(new_machine.to_dict()), status=200)
 
 
 CORS(app)

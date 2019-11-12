@@ -82,6 +82,15 @@ class Event():
         if updated_event.modified_count > 0:
             self.users.append(user._id)
 
+    def add_machine(self, machine):
+        query = {"_id": self._id, "users": {"$ne": machine._id}}
+        new_values = {
+            "$addToSet": {"machines": machine._id}
+        }
+        updated_event = events.update_one(query, new_values)
+        if updated_event.modified_count > 0:
+            self.machines.append(machine._id)
+
     def add_new_order(self, order):
         query = {"_id": self._id, "new_orders": {"$ne": order._id}}
         new_values = {

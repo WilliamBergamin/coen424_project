@@ -1,7 +1,6 @@
 import bcrypt
 import datetime
 import base64
-from pymongo import errors
 
 from init import mongo_db, app
 
@@ -26,14 +25,17 @@ class User():
         'name': 'str',
         'email': 'str',
         'password': 'str',
+        'admin': 'bool',
         'token': 'str',
         'orders': 'str',
     }
 
     attribute_map = {
         '_id': 'ID pf the user',
+        'name': "Name of the user",
         'email': 'Email of the user',
         'password': 'hashed password of the user',
+        'admin': 'boolean stating if the client if an admin',
         'token': 'token used to validate the user is signed in',
         'orders': 'ids of the orders associated with the user'
     }
@@ -43,6 +45,7 @@ class User():
         self.name = name
         self.email = email
         self.password = bcrypt.hashpw(password.encode('utf8'), salt)
+        self.admin = False
         self.token = None
         self.orders = []
 
@@ -52,13 +55,13 @@ class User():
             'name': self.name,
             'email': self.email,
             'password': self.password,
+            'admin': False,  # No user can be created admin.
             'token': self.token,
             'orders': self.orders
         }
         insert = users.update_one(query,
                                   {"$setOnInsert": new_user},
                                   upsert=True)
-        app.logger.info(insert)
         if insert.upserted_id is None:
             raise User_Creation_Exception
         else:
@@ -69,6 +72,7 @@ class User():
         new_values = {"$set": {
                 'name': self.name,
                 'email': self.email,
+                'admin': self.admin,
                 'token': self.token,
                 'orders': self.orders
             }
@@ -78,7 +82,7 @@ class User():
     def get_token(self, password):
         if bcrypt.checkpw(password.encode('utf8'), self.password):
             # base 64 encoded datetime:email
-            str_token = str(datetime.datetime.now())+":"+self.email
+            str_token = str(datetime.datetime.now())+":"+str(self._id)
             self.token = base64.urlsafe_b64encode(
                                     str_token.encode('utf8')).decode('utf8')
         else:
@@ -103,6 +107,7 @@ class User():
                    "")
         user._id = found_user.get("_id")
         user.password = found_user.get("password")
+        user.admin = found_user.get("admin")
         user.token = found_user.get("token")
         user.orders = found_user.get("orders")
         return user
@@ -117,15 +122,10 @@ class User():
                    "")
         user._id = found_user.get("_id")
         user.password = found_user.get("password")
+        user.admin = found_user.get("admin")
         user.token = found_user.get("token")
         user.orders = found_user.get("orders")
         return user
-
-    @staticmethod
-    def exist(email):
-        if users.find({'email': email}).count() > 0:
-            return True
-        return False
 
     def to_dict(self):
         return {
