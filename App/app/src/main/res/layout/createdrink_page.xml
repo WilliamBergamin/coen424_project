@@ -76,6 +76,15 @@
             android:background="@android:drawable/btn_dropdown"
             android:spinnerMode="dropdown" />
 
+        <CheckBox
+            android:id="@+id/doubleCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/createyourdrink"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="161dp"
+            android:text="Double Alcohol" />
+
         <Button
             android:id="@+id/addToCartButton"
             android:layout_width="300dp"
