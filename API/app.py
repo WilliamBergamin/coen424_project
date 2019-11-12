@@ -1,18 +1,19 @@
 import json
-import os
 from flask import g
 from flask import request
 from flask_cors import CORS
-from flask import make_response
 from flask_httpauth import HTTPTokenAuth
-import base64
+from pymongo import errors
 
 from models.Event import Event
 from models.User import User
+from models.User import User_Creation_Exception
 from models.Order import Order
 from models.Drink import Drink
 
-from init import app, JSON_MIME_TYPE, mongo_db
+
+from init import app, JSON_MIME_TYPE
+from utils import json_response
 
 auth = HTTPTokenAuth(scheme='Token')
 
@@ -72,12 +73,14 @@ def post_user():
         return json_response(error, 400)
     app.logger.info("Request received")
     data = request.json
-    if User.exist(data['email']):
-        return json_response(status=409)
     new_user = User(name=data['name'],
                     email=data['email'],
                     password=data['password'])
-    new_user.create()
+    try:
+        new_user.create()
+    except User_Creation_Exception as e:
+        error = json.dumps({'error': e.message})
+        return json_response(status=409)
     return json_response(json.dumps(new_user.to_dict()), status=201)
 
 
@@ -163,14 +166,6 @@ def post_user_to_event(event_key):
         return json_response(error, 404)
     event.add_user(g.current_user)
     return json_response(json.dumps(event.to_dict()), status=200)
-
-
-def json_response(data='', status=200, headers=None):
-    headers = headers or {}
-    if 'Content-Type' not in headers:
-        headers['Content-Type'] = JSON_MIME_TYPE
-    res = make_response(data, status, headers)
-    return res
 
 
 CORS(app)

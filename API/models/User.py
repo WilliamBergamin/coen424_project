@@ -1,10 +1,15 @@
 import bcrypt
 import datetime
 import base64
+from pymongo import errors
 
 from init import mongo_db, app
 
 users = mongo_db.users
+
+
+class User_Creation_Exception(Exception):
+    message = "Email already used for existing user"
 
 
 class User():
@@ -40,12 +45,9 @@ class User():
         self.password = bcrypt.hashpw(password.encode('utf8'), salt)
         self.token = None
         self.orders = []
-        if bcrypt.checkpw(password.encode('utf8'), self.password):
-            print("true")
-        else:
-            print("false")
 
     def create(self):
+        query = {'email': self.email}
         new_user = {
             'name': self.name,
             'email': self.email,
@@ -53,7 +55,14 @@ class User():
             'token': self.token,
             'orders': self.orders
         }
-        self._id = users.insert_one(new_user).inserted_id
+        insert = users.update_one(query,
+                                  {"$setOnInsert": new_user},
+                                  upsert=True)
+        app.logger.info(insert)
+        if insert.upserted_id is None:
+            raise User_Creation_Exception
+        else:
+            self._id = insert.upserted_id
 
     def save(self):
         query = {"_id": self._id}
@@ -70,7 +79,8 @@ class User():
         if bcrypt.checkpw(password.encode('utf8'), self.password):
             # base 64 encoded datetime:email
             str_token = str(datetime.datetime.now())+":"+self.email
-            self.token = base64.urlsafe_b64encode(str_token.encode('utf8')).decode('utf8')
+            self.token = base64.urlsafe_b64encode(
+                                    str_token.encode('utf8')).decode('utf8')
         else:
             self.token = None
 

@@ -1,4 +1,3 @@
-import os
 from pymongo import MongoClient
 from logging.config import dictConfig
 from flask import Flask
