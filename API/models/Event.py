@@ -5,6 +5,10 @@ from init import mongo_db, app
 events = mongo_db.events
 
 
+class Order_Process_Exception(Exception):
+    message = "Exception in order process"
+
+
 class Event():
 
     """
@@ -99,6 +103,30 @@ class Event():
         updated_event = events.update_one(query, new_values)
         if updated_event.modified_count > 0:
             self.new_orders.append(order._id)
+
+    def machine_get_order(self, order):
+        query = {"_id": self._id, "new_orders": {"$eq": order._id}}
+        new_values = {
+            "$pull": {"new_orders": order._id},
+            "$addToSet": {"pending_orders": order._id}
+        }
+        updated_event = events.update_one(query, new_values)
+        if updated_event.modified_count != 1:
+            raise Order_Process_Exception
+        self.new_orders.remove(order._id)
+        self.pending_orders.append(order._id)
+
+    def machine_finished_order(self, order):
+        query = {"_id": self._id, "pending_orders": {"$eq": order._id}}
+        new_values = {
+            "$pull": {"pending_orders": order._id},
+            "$addToSet": {"processed_orders": order._id}
+        }
+        updated_event = events.update_one(query, new_values)
+        if updated_event.modified_count != 1:
+            raise Order_Process_Exception
+        self.pending_orders.remove(order._id)
+        self.processed_orders.append(order._id)
 
     @classmethod
     def find(cls, event_key):

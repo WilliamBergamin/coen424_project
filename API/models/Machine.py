@@ -46,7 +46,7 @@ class Machine():
         self.machine_key = None
         self.token = None
         self.selected_order = None
-        self.processed_orders = None
+        self.processed_orders = []
         self.state = self.states[0]
         self.error = None
 
@@ -66,6 +66,30 @@ class Machine():
         self._id = machines.insert_one(new_machine).inserted_id
         self.machine_key = base64.urlsafe_b64encode(
                                 str(self._id).encode('utf8')).decode('utf8')
+
+    def set_selected_order(self, order):
+        query = {
+            "_id": self._id,
+            "selected_order": None
+        }
+        updated_order = machines.update_one(query,
+                                          {'$set':{'selected_order': order._id}})
+        if updated_order.modified_count > 0:
+            self.selected_order = order._id
+
+    def set_selected_order_done(self):
+        query = {
+            "_id": self._id,
+            "selected_order": {'$ne': None}
+        }
+        updated_order = machines.update_one(query,
+                                            {
+                                                '$addToSet': {'processed_orders': self.selected_order},
+                                                '$set': {'selected_order': None}
+                                            })
+        if updated_order.modified_count > 0:
+            self.processed_orders.append(self.selected_order)
+            self.selected_order = None
 
     @classmethod
     def find(cls, machine_key):

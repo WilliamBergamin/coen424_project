@@ -43,6 +43,17 @@ class Order:
         self.__price = sum([drink.price for drink in drinks])
         self.payed = payed
 
+    def create(self):
+        new_event = {
+            'user_id': self.user_id,
+            'machine_id': self.machine_id,
+            'state': self.state,
+            'drinks': [SON(drink.to_dict()) for drink in self.__drinks],
+            'price': self.__price,
+            'payed': self.payed
+        }
+        self._id = orders.insert_one(new_event).inserted_id
+
     def append_drinks(self, drink):
         self.__drinks.append(drink)
         self.__price = sum([drink.price for drink in self.drinks])
@@ -59,28 +70,49 @@ class Order:
             "state": self.states[1]
         }
         updated_order = orders.update_one(query,
-                                          {
+                                          {'$set':{
                                               'state': self.states[2],
                                               'machine_id': machine_id
-                                          })
+                                          }})
         if updated_order.modified_count > 0:
             self.state = self.states[2]
             self.machine_id = machine_id
 
-    def create(self):
-        new_event = {
-            'user_id': self.user_id,
-            'machine_id': self.machine_id,
-            'state': self.state,
-            'drinks': [SON(drink.to_dict()) for drink in self.__drinks],
-            'price': self.__price,
-            'payed': self.payed
+    def set_done(self):
+        query = {
+            "_id": self._id,
+            "state": self.states[2]
         }
-        self._id = orders.insert_one(new_event).inserted_id
+        updated_order = orders.update_one(query,
+                                          {'$set':{
+                                              'state': self.states[3]
+                                          }})
+        if updated_order.modified_count > 0:
+            self.state = self.states[3]
 
     @staticmethod
     def get_price_from_drinks(drinks):
         return sum([drink.price for drink in drinks])
+    
+    @classmethod
+    def find_by_id(cls, order_id):
+        found_order_data = orders.find_one({"_id": ObjectId(order_id)})
+        if found_order_data is None:
+            return None
+        drinks = [
+                    Drink(drink.get('mixer_type'),
+                          drink.get('alcohol_type'),
+                          drink.get('double')) for drink in found_order_data.get('drinks')
+                 ]
+        found_order = cls(found_order_data.get('user_id'),
+                          drinks,
+                          found_order_data.get('payed'))
+        found_order._id = found_order_data.get('_id')
+        found_order.state = found_order_data.get('state')
+        found_order.machine_id = found_order_data.get('machine_id')
+        found_order.__price = found_order_data.get('price')
+        found_order.payed = found_order_data.get('payed')
+        return found_order
 
     @classmethod
     def find(cls, order_key):
@@ -96,6 +128,7 @@ class Order:
         found_order = cls(found_order_data.get('user_id'),
                           drinks,
                           found_order_data.get('payed'))
+        found_order._id = found_order_data.get('_id')
         found_order.state = found_order_data.get('state')
         found_order.machine_id = found_order_data.get('machine_id')
         found_order.__price = found_order_data.get('price')

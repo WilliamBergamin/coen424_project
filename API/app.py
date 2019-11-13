@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flask_httpauth import HTTPTokenAuth
 
 from models.Event import Event
+from models.Event import Order_Process_Exception
 from models.User import User
 from models.User import User_Creation_Exception
 from models.Machine import Machine
@@ -45,7 +46,7 @@ def test():
     """
     return 'very AI, many Knowledge, much Cloud'
 
-
+# ---------------------- EVENT END-POINTS ---------------------- #
 @app.route('/api/v1/event', methods=['POST'])
 def post_event():
     """
@@ -63,7 +64,7 @@ def post_event():
     new_event.create()
     return json_response(json.dumps(new_event.to_dict()), status=201)
 
-
+# ---------------------- USER END-POINTS ---------------------- #
 @app.route('/api/v1/user', methods=['POST'])
 def post_user():
     """
@@ -181,7 +182,7 @@ def post_user_to_event(event_key):
     event.add_user(g.current_user)
     return json_response(json.dumps(event.to_dict()), status=200)
 
-
+# ---------------------- MACHINE END-POINTS ---------------------- #
 @app.route('/api/v1/machine', methods=['POST'])
 @auth.login_required
 def post_machine():
@@ -219,22 +220,80 @@ def post_machine_to_event(event_key):
     return json_response(json.dumps(event.to_dict()), status=200)
 
 
-@app.route('/api/v1/machine/order/<string:order_key>', methods=['POST'])
+@app.route('/api/v1/machine/order/<string:event_key>/<string:order_key>', methods=['POST'])
 @auth.login_required
-def machine_get_order():
+def machine_get_order(event_key, order_key):
     """
     header Authorization : Token the_machine_token
     """
     if g.current_machine is None:
         app.logger.info('No machine found might have been a user token')
         return json_response(status=401)
-    new_machine = Machine()
+    if g.current_machine.selected_order is not None:
+        app.logger.info('Machine has not finished its selected order')
+        error = json.dumps({'error': 'Machine not finished selected order'})
+        return json_response(error, 403)
+    order = Order.find(order_key)
+    if order is None:
+        app.logger.info('Order not found')
+        error = json.dumps({'error': 'Order not found'})
+        return json_response(error, 404)
+    if order.machine_id is not None:
+        app.logger.info('Order already has an associated machine')
+        error = json.dumps({'error': 'Order already has an associated machine'})
+        return json_response(error, 403)
+    event = Event.find(event_key)
+    if event is None:
+        app.logger.info('Event not found')
+        error = json.dumps({'error': 'Event not found'})
+        return json_response(error, 404)
     try:
-        new_machine.create(g.current_user)
-    except Machine_Creation_Exception:
-        app.logger.info('User: '+str(g.current_user._id)+' unautherised for this creation action')
+        event.machine_get_order(order)
+    except Order_Process_Exception:
+        app.logger.info('Order: '+str(order._id)+' was not found in the new_orders of event: '+str(event._id))
+        error = json.dumps({'error': 'Order was not found in event new order'})
+        return json_response(error, 404)
+    g.current_machine.set_selected_order(order)
+    order.assigne_machine(g.current_machine._id)
+    return json_response(json.dumps(order.to_dict()), status=200)
+
+
+@app.route('/api/v1/machine/order/done/<string:event_key>', methods=['POST'])
+@auth.login_required
+def machine_post_order_completed(event_key):
+    """
+    header Authorization : Token the_machine_token
+    """
+    if g.current_machine is None:
+        app.logger.info('No machine found might have been a user token')
         return json_response(status=401)
-    return json_response(json.dumps(new_machine.to_dict()), status=200)
+    if g.current_machine.selected_order is None:
+        app.logger.info('Machine has no order to finsih')
+        error = json.dumps({'error': 'Machine has no order to finish'})
+        return json_response(error, 403)
+    order = Order.find_by_id(g.current_machine.selected_order)
+    if order is None:
+        app.logger.info('Order not found')
+        error = json.dumps({'error': 'Order not found'})
+        return json_response(error, 404)
+    if order.machine_id is None:
+        app.logger.info('Order does not have machine id, it should have one')
+        error = json.dumps({'error': 'Order does not have machine_id'})
+        return json_response(error, 403)
+    event = Event.find(event_key)
+    if event is None:
+        app.logger.info('Event not found')
+        error = json.dumps({'error': 'Event not found'})
+        return json_response(error, 404)
+    try:
+        event.machine_finished_order(order)
+    except Order_Process_Exception:
+        app.logger.info('Order: '+str(order._id)+' was not found in the new_orders of event: '+str(event._id))
+        error = json.dumps({'error': 'Order was not found in event new order'})
+        return json_response(error, 404)
+    g.current_machine.set_selected_order_done()
+    order.set_done()
+    return json_response(json.dumps(order.to_dict()), status=200)
 
 
 CORS(app)
