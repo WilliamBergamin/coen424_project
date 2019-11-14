@@ -6,12 +6,24 @@ networks:
 services:
   mongodb:
     image: mongo:4.2.0
-    container_name: "mongodb"
+    container_name: mongodb
     command: mongod
     restart: always
     ports:
       - 27017:27017
     volumes:
       - ./database/db:/data/db
+    networks:
+      - db
+  api:
+    image: kingwill/projects:coen424-project-api-1.0
+    container_name: flask_api
+    depends_on:
+        - mongodb
+    ports:
+      - 5000:80
+    environment: 
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
     networks:
       - db

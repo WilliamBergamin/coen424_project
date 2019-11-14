@@ -1,6 +1,6 @@
-import bcrypt
 import datetime
 import base64
+import bcrypt
 
 from init import mongo_db, app
 
