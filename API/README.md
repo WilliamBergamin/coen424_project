@@ -27,7 +27,7 @@ API is a powerful Restfull API that uses the flask framework, allows to manage u
 
 ```JSON
 POST /api/v1/event
-headers = Authenticate: Token Authentication_user_token
+headers = Authorization: Token Authentication_user_token
 json =  {
     "name":"",
     "location":""
@@ -96,7 +96,7 @@ json = {
 
 ```JSON
 GET /api/v1/user
-headers = Authenticate: Token Authentication_user_token
+headers = Authorization: Token Authentication_user_token
 ```
 
 ```JSON
@@ -117,7 +117,7 @@ json = {
 
 ```RESQUEST
 POST /api/v1/user/event/<string:event_key>
-headers = Authenticate: Token Authentication_user_token
+headers = Authorization: Token Authentication_user_token
 ```
 
 ```JSON
@@ -137,7 +137,7 @@ json = {
 POST /api/v1/order
 headers = 
     Content-Type: application/json
-    Authenticate: Token Authentication_user_token
+    Authorization: Token Authentication_user_token
 json={
     "event_key": "",
 	"drinks": [
@@ -187,7 +187,7 @@ json = {
 
 ```JSON
 POST /api/v1/machine
-headers = Authenticate: Token Authentication_user_token
+headers = Authorization: Token Authentication_user_token
 ```
 
 ```JSON
@@ -208,7 +208,7 @@ json = {
 
 ```REQUEST
 POST /api/v1/machine/event/<string:event_key>
-header Authenticate: Token Authentication_machine_token
+header Authorization: Token Authentication_machine_token
 ```
 
 ```JSON
@@ -226,7 +226,7 @@ json = {
 
 ```REQUEST
 GET /api/v1/machine/order/<string:event_key>/<string:order_key>
-header Authenticate: Token Authentication_machine_token
+header Authorization: Token Authentication_machine_token
 ```
 
 ```JSON
@@ -261,7 +261,7 @@ json = {
 
 ```REQUEST
 POST /api/v1/machine/order/done/<string:event_key>
-header Authenticate: Token Authentication_machine_token
+header Authorization: Token Authentication_machine_token
 ```
 
 ```JSON
