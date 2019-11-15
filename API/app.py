@@ -49,7 +49,7 @@ def test():
 @auth.login_required
 def post_event():
     """
-    header Authenticate: Token realm="Authentication Required"
+    header Authenticate: Token Authentication_user_token
     {
       "name":"your moms a hoe",
       "location":"ur moms house"
@@ -119,7 +119,7 @@ def get_token():
 @auth.login_required
 def get_user():
     """
-    header Authenticate: Token realm="Authentication Required"
+    header Authenticate: Token Authentication_user_token
     """
     if g.get('current_user', None) is None:
         return json_error('No user found might have been a machine token',
@@ -127,11 +127,28 @@ def get_user():
     return json_response(json.dumps(g.current_user.to_dict()), status=200)
 
 
+@app.route('/api/v1/user/event/<string:event_key>', methods=['POST'])
+@auth.login_required
+def post_user_to_event(event_key):
+    """
+    header Authenticate: Token Authentication_user_token
+    /api/v1/user/event/<string:event_key>
+    """
+    if g.get('current_user', None) is None:
+        return json_error('No user found might have been a machine token',
+                          status=401)
+    event = Event.find(event_key)
+    if event is None:
+        return json_error('Event not found', 'Event not found', 404)
+    event.add_user(g.current_user)
+    return json_response(json.dumps(event.to_dict()), status=200)
+
+
 @app.route('/api/v1/order', methods=['POST'])
 @auth.login_required
 def post_order():
     """
-    header Authorization : Token the_user_token
+    header Authenticate: Token Authentication_user_token
     {
       "event_key": "y37jsnks",
       "drinks": [{
@@ -161,29 +178,12 @@ def post_order():
     g.current_user.add_order(new_order)
     return json_response(json.dumps(new_order.to_dict()), status=200)
 
-
-@app.route('/api/v1/user/event/<string:event_key>', methods=['POST'])
-@auth.login_required
-def post_user_to_event(event_key):
-    """
-    header Authorization : Token the_user_token
-    /api/v1/user/event/<string:event_key>
-    """
-    if g.get('current_user', None) is None:
-        return json_error('No user found might have been a machine token',
-                          status=401)
-    event = Event.find(event_key)
-    if event is None:
-        return json_error('Event not found', 'Event not found', 404)
-    event.add_user(g.current_user)
-    return json_response(json.dumps(event.to_dict()), status=200)
-
 # ---------------------- MACHINE END-POINTS ---------------------- #
 @app.route('/api/v1/machine', methods=['POST'])
 @auth.login_required
 def post_machine():
     """
-    header Authorization : Token the_user_token
+    header Authenticate: Token Authentication_user_token
     """
     if g.get('current_user', None) is None:
         return json_error('No user found might have been a machine token',
@@ -201,7 +201,7 @@ def post_machine():
 @auth.login_required
 def post_machine_to_event(event_key):
     """
-    header Authorization : Token the_machine_token
+    header Authenticate: Token Authentication_machine_token
     /api/v1/user/event/<string:event_key>
     """
     if g.get('current_machine', None) is None:
@@ -213,11 +213,11 @@ def post_machine_to_event(event_key):
     return json_response(json.dumps(event.to_dict()), status=200)
 
 
-@app.route('/api/v1/machine/order/<string:event_key>/<string:order_key>', methods=['POST'])
+@app.route('/api/v1/machine/order/<string:event_key>/<string:order_key>', methods=['GET'])
 @auth.login_required
 def machine_get_order(event_key, order_key):
     """
-    header Authorization : Token the_machine_token
+    header Authenticate: Token Authentication_machine_token
     """
     if g.get('current_machine', None) is None:
         return json_error('No machine found might have been a user token', status=401)
@@ -247,7 +247,7 @@ def machine_get_order(event_key, order_key):
 @auth.login_required
 def machine_post_order_completed(event_key):
     """
-    header Authorization : Token the_machine_token
+    header Authenticate: Token Authentication_machine_token
     """
     if g.get('current_machine', None) is None:
         return json_error('No machine found might have been a user token', status=401)
