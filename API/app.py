@@ -6,16 +6,14 @@ from flask_httpauth import HTTPTokenAuth
 
 from models.Event import Event
 from models.Event import Order_Process_Exception
-from models.User import User
-from models.User import User_Creation_Exception
-from models.Machine import Machine
-from models.Machine import Machine_Creation_Exception
+from models.User import User, User_Creation_Exception
+from models.Machine import Machine, Machine_Creation_Exception
 from models.Order import Order
 from models.Drink import Drink
 
 
 from init import app, JSON_MIME_TYPE
-from utils import json_response
+from utils import json_response, json_error
 
 auth = HTTPTokenAuth(scheme='Token')
 
@@ -48,17 +46,23 @@ def test():
 
 # ---------------------- EVENT END-POINTS ---------------------- #
 @app.route('/api/v1/event', methods=['POST'])
+@auth.login_required
 def post_event():
     """
+    header Authenticate: Token realm="Authentication Required"
     {
       "name":"your moms a hoe",
       "location":"ur moms house"
     }
     """
+    if g.get('current_user', None) is None:
+        return json_error('No user found might have been a machine token',
+                          status=401)
+    if g.current_user.admin is False:
+        return json_error('User '+g.current_user._id+' cannot perform this action',
+                          status=401)
     if request.content_type != JSON_MIME_TYPE:
-        app.logger.info('Invalid Content Type')
-        error = json.dumps({'error': 'Invalid Content Type'})
-        return json_response(error, 400)
+        return json_error('Invalid Content Type', 'Invalid Content Type', 400)
     data = request.json
     new_event = Event(name=data['name'], location=data['location'])
     new_event.create()
@@ -75,9 +79,7 @@ def post_user():
     }
     """
     if request.content_type != JSON_MIME_TYPE:
-        app.logger.info('Invalid Content Type')
-        error = json.dumps({'error': 'Invalid Content Type'})
-        return json_response(error, 400)
+        return json_error('Invalid Content Type', 'Invalid Content Type', 400)
     data = request.json
     new_user = User(name=data['name'],
                     email=data['email'],
@@ -85,9 +87,8 @@ def post_user():
     try:
         new_user.create()
     except User_Creation_Exception:
-        app.logger.info('Email already used for existing user')
-        error = json.dumps({'error': "Email already used for existing user"})
-        return json_response(error, 409)
+        return json_error('Email already used for existing user',
+                          'Email already used for existing user', status=409)
     return json_response(json.dumps(new_user.to_dict()), status=201)
 
 
@@ -100,17 +101,17 @@ def get_token():
     }
     """
     if request.content_type != JSON_MIME_TYPE:
-        app.logger.info('Invalid Content Type')
-        error = json.dumps({'error': 'Invalid Content Type'})
-        return json_response(error, 400)
+        return json_error('Invalid Content Type', 'Invalid Content Type', 400)
     data = request.json
     user = User.find(data['email'])
     if user is None:
-        return json_response(status=404)
+        return json_error('User was not founc with given email',
+                          "User not found", status=404)
     user.get_token(data["password"])
     user.save()
     if user.token is None:
-        return json_response(json.dumps(user.to_dict()), status=401)
+        return json_error('The authentification failed',
+                          json.dumps(user.to_dict()), status=401)
     return json_response(json.dumps(user.to_dict()), status=200)
 
 
@@ -118,11 +119,11 @@ def get_token():
 @auth.login_required
 def get_user():
     """
-    header WWW-Authenticate: Token realm="Authentication Required"
+    header Authenticate: Token realm="Authentication Required"
     """
-    if g.current_user is None:
-        app.logger.info('No user found might have been a machine token')
-        return json_response(status=401)
+    if g.get('current_user', None) is None:
+        return json_error('No user found might have been a machine token',
+                          status=401)
     return json_response(json.dumps(g.current_user.to_dict()), status=200)
 
 
@@ -141,17 +142,14 @@ def post_order():
     }
     """
     if request.content_type != JSON_MIME_TYPE:
-        app.logger.info('Invalid Content Type')
-        error = json.dumps({'error': 'Invalid Content Type'})
-        return json_response(error, 400)
-    if g.current_user is None:
-        app.logger.info('No user found might have been a machine token')
-        return json_response(status=401)
+        return json_error('Invalid Content Type', 'Invalid Content Type', 400)
+    if g.get('current_user', None) is None:
+        return json_error('No user found might have been a machine token',
+                          status=401)
     data = request.json
     event = Event.find(data.get('event_key'))
     if event is None:
-        error = json.dumps({'error': 'Event not found'})
-        return json_response(error, 404)
+        return json_error('Event not found', 'Event not found', 404)
     drinks = [Drink(drink.get('mixer_type'),
                     drink.get('alcohol_type'),
                     drink.get('double')) for drink in data.get('drinks')]
@@ -171,14 +169,12 @@ def post_user_to_event(event_key):
     header Authorization : Token the_user_token
     /api/v1/user/event/<string:event_key>
     """
-    if g.current_user is None:
-        app.logger.info('No user found might have been a machine token')
-        return json_response(status=401)
+    if g.get('current_user', None) is None:
+        return json_error('No user found might have been a machine token',
+                          status=401)
     event = Event.find(event_key)
     if event is None:
-        app.logger.info('Event not found')
-        error = json.dumps({'error': 'Event not found'})
-        return json_response(error, 404)
+        return json_error('Event not found', 'Event not found', 404)
     event.add_user(g.current_user)
     return json_response(json.dumps(event.to_dict()), status=200)
 
@@ -189,15 +185,15 @@ def post_machine():
     """
     header Authorization : Token the_user_token
     """
-    if g.current_user is None:
-        app.logger.info('No user found might have been a machine token')
-        return json_response(status=401)
+    if g.get('current_user', None) is None:
+        return json_error('No user found might have been a machine token',
+                          status=401)
     new_machine = Machine()
     try:
         new_machine.create(g.current_user)
     except Machine_Creation_Exception:
-        app.logger.info('User: '+str(g.current_user._id)+' unautherised for this creation action')
-        return json_response(status=401)
+        return json_error('User: '+str(g.current_user._id)+' unautherised for this creation action',
+                          status=401)
     return json_response(json.dumps(new_machine.to_dict()), status=200)
 
 
@@ -208,14 +204,11 @@ def post_machine_to_event(event_key):
     header Authorization : Token the_machine_token
     /api/v1/user/event/<string:event_key>
     """
-    if g.current_machine is None:
-        app.logger.info('No machine found might have been a user token')
-        return json_response(status=401)
+    if g.get('current_machine', None) is None:
+        return json_error('No machine found might have been a user token', status=401)
     event = Event.find(event_key)
     if event is None:
-        app.logger.info('Event not found')
-        error = json.dumps({'error': 'Event not found'})
-        return json_response(error, 404)
+        return json_error('Event not found', 'Event not found', 404)
     event.add_machine(g.current_machine)
     return json_response(json.dumps(event.to_dict()), status=200)
 
@@ -226,33 +219,25 @@ def machine_get_order(event_key, order_key):
     """
     header Authorization : Token the_machine_token
     """
-    if g.current_machine is None:
-        app.logger.info('No machine found might have been a user token')
-        return json_response(status=401)
+    if g.get('current_machine', None) is None:
+        return json_error('No machine found might have been a user token', status=401)
     if g.current_machine.selected_order is not None:
-        app.logger.info('Machine has not finished its selected order')
-        error = json.dumps({'error': 'Machine not finished selected order'})
-        return json_response(error, 403)
+        return json_error('Machine has not finished its selected order',
+                          'Machine not finished selected order', 403)
     order = Order.find(order_key)
     if order is None:
-        app.logger.info('Order not found')
-        error = json.dumps({'error': 'Order not found'})
-        return json_response(error, 404)
+        return json_error('Order not found', 'Order not found', 404)
     if order.machine_id is not None:
-        app.logger.info('Order already has an associated machine')
-        error = json.dumps({'error': 'Order already has an associated machine'})
-        return json_response(error, 403)
+        return json_error('Order already has an associated machine',
+                          'Order already has an associated machine', 403)
     event = Event.find(event_key)
     if event is None:
-        app.logger.info('Event not found')
-        error = json.dumps({'error': 'Event not found'})
-        return json_response(error, 404)
+        return json_error('Event not found', 'Event not found', 404)
     try:
         event.machine_get_order(order)
     except Order_Process_Exception:
-        app.logger.info('Order: '+str(order._id)+' was not found in the new_orders of event: '+str(event._id))
-        error = json.dumps({'error': 'Order was not found in event new order'})
-        return json_response(error, 404)
+        return json_error('Order: '+str(order._id)+' was not found in the new_orders of event: '+str(event._id),
+                          'Order was not found in event new order', 404)
     g.current_machine.set_selected_order(order)
     order.assigne_machine(g.current_machine._id)
     return json_response(json.dumps(order.to_dict()), status=200)
@@ -264,33 +249,25 @@ def machine_post_order_completed(event_key):
     """
     header Authorization : Token the_machine_token
     """
-    if g.current_machine is None:
-        app.logger.info('No machine found might have been a user token')
-        return json_response(status=401)
+    if g.get('current_machine', None) is None:
+        return json_error('No machine found might have been a user token', status=401)
     if g.current_machine.selected_order is None:
-        app.logger.info('Machine has no order to finsih')
-        error = json.dumps({'error': 'Machine has no order to finish'})
-        return json_response(error, 403)
+        return json_error('Machine has no order to finsih',
+                          'Machine has no order to finish', 403)
     order = Order.find_by_id(g.current_machine.selected_order)
     if order is None:
-        app.logger.info('Order not found')
-        error = json.dumps({'error': 'Order not found'})
-        return json_response(error, 404)
+        return json_error('Order not found', 'Order not found', 404)
     if order.machine_id is None:
-        app.logger.info('Order does not have machine id, it should have one')
-        error = json.dumps({'error': 'Order does not have machine_id'})
-        return json_response(error, 403)
+        return json_error('Order does not have machine id, it should have one',
+                          'Order does not have machine_id', 403)
     event = Event.find(event_key)
     if event is None:
-        app.logger.info('Event not found')
-        error = json.dumps({'error': 'Event not found'})
-        return json_response(error, 404)
+        return json_error('Event not found', 'Event not found', 404)
     try:
         event.machine_finished_order(order)
     except Order_Process_Exception:
-        app.logger.info('Order: '+str(order._id)+' was not found in the new_orders of event: '+str(event._id))
-        error = json.dumps({'error': 'Order was not found in event new order'})
-        return json_response(error, 404)
+        return json_error('Order: '+str(order._id)+' was not found in the new_orders of event: '+str(event._id),
+                          'Order was not found in event new order', 404)
     g.current_machine.set_selected_order_done()
     order.set_done()
     return json_response(json.dumps(order.to_dict()), status=200)
