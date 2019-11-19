@@ -1,4 +1,9 @@
-FROM tiangolo/uwsgi-nginx-flask:python3.7
+FROM python:3.7.5-slim
+
+RUN apt-get clean \
+    && apt-get -y update
+
+RUN apt-get -y install build-essential
 
 ENV PATH=$PATH:/usr/local/bin
 ENV APP_HOME /app
@@ -7,7 +12,6 @@ RUN mkdir -p $APP_HOME
 WORKDIR $APP_HOME
 
 COPY uwsgi.ini uwsgi.ini
-COPY nginx.conf nginx.conf
 COPY models models
 COPY init.py init.py
 COPY utils.py utils.py
@@ -15,3 +19,5 @@ COPY app.py app.py
 COPY requirements.txt requirements.txt
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
+
+CMD ["uwsgi", "--ini", "uwsgi.ini"]
