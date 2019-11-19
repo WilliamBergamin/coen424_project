@@ -28,7 +28,7 @@ services:
       - MONGODB_PORT=27017
     restart: always
     expose:
-      - 80
+      - 8080
     networks:
       - db
       - api
