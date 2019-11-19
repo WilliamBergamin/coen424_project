@@ -27,8 +27,8 @@ services:
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
     restart: always
-    # expose:
-    #   - 80
+    expose:
+      - 80
     networks:
       - db
       - api
