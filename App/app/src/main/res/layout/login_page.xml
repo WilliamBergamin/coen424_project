@@ -26,7 +26,6 @@
             android:layout_height="50dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:textAlignment="top"
             android:text="Log in to your account"
             android:background="#FFFFFF"
             android:elevation="0dp"

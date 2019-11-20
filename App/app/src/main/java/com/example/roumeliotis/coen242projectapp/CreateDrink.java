@@ -14,7 +14,7 @@ import android.widget.CheckBox;
 import java.util.ArrayList;
 import java.util.List;
 
-
+// Create a custom drink and add it to your cart
 public abstract class CreateDrink extends Activity implements OnItemSelectedListener{
 
     private Spinner spinnerAlcohol;
@@ -56,6 +56,7 @@ public abstract class CreateDrink extends Activity implements OnItemSelectedList
 
         }
 
+        // Create the official drink and add the order to the cart
         createDrinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,7 +64,7 @@ public abstract class CreateDrink extends Activity implements OnItemSelectedList
                     // Error message here for empty field
                 }
                 else{
-                    // Store order at this point
+                    // Add order to the cart
                     startActivity(new Intent(CreateDrink.this, Cart.class));
                 }
             }

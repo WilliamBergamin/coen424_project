@@ -10,7 +10,7 @@
     android:paddingRight="0dp"
     android:id="@+id/drawer_layout"
     android:background="#FFFFFF"
-    tools:context=".Login">
+    tools:context=".Orders">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,21 +21,21 @@
         android:paddingTop="16dp">
 
         <TextView
-            android:id="@+id/logintoyouraccount"
+            android:id="@+id/viewOrderHistory"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:text="Items in my Cart"
+            android:text="View Order History"
             android:background="#FFFFFF"
             android:elevation="0dp"
             android:textColor="@color/colorHotPink"
             android:textSize="20dp"/>
 
-        <TextView
-            android:id="@+id/email"
+        <ListView
+            android:id="@+id/orderCodesList"
             android:layout_width="300dp"
-            android:layout_height="wrap_content"
+            android:layout_height="401dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="86dp"

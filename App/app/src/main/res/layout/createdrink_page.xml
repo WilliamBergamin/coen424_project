@@ -10,7 +10,8 @@
     android:paddingRight="0dp"
     android:id="@+id/drawer_layout"
     android:background="#FFFFFF"
-    tools:context=".Login">
+    tools:context=".CreateDrink">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
