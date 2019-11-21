@@ -12,5 +12,10 @@ public class ManagerConfigs {
     public static final String USER_EMAIL_COLUMN = "email";
     public static final String USER_PASSWORD_COLUMN = "password";
 
+    public static final String TABLE_DRINK = "DRINKS";
+    public static final String DRINK_REMOTE_ID = "remote_id";
+    public static final String DRINK_MIXER = "mixer";
+    public static final String DRINK_ALCOHOL = "alcohol";
+    public static final String DRINK_DOUBLE = "double";
 
 }

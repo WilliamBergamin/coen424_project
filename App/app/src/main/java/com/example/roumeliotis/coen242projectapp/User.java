@@ -2,7 +2,6 @@ package com.example.roumeliotis.coen242projectapp;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import java.util.Date;
 
 public class User implements Parcelable{
 
@@ -47,20 +46,16 @@ public class User implements Parcelable{
     }
 
     // Get and set name
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     // Get and set email
     public String getEmail(){ return email; }
-    public void setEmail(){ this.email = email; }
+    public void setEmail(String email){ this.email = email; }
 
     // Get and set password
     public String getPassword(){ return password; }
-    public void setPassword(){ this.password = password; }
+    public void setPassword(String password){ this.password = password; }
 
     @Override
     public int describeContents() {

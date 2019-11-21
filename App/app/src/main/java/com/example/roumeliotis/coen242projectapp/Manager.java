@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 public class Manager extends SQLiteOpenHelper{
 
-    private static final String TAG = "GameManager";
+    private static final String TAG = "Manager";
     private Context context = null;
 
     public Manager(Context context) {
@@ -20,7 +20,7 @@ public class Manager extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d(TAG,"GameManager onCreate");
+        Log.d(TAG,"Manager onCreate");
 
         //Create User Table
         String CREATE_USER_TABLE = "CREATE TABLE " + ManagerConfigs.TABLE_USER + "(" +
@@ -64,39 +64,5 @@ public class Manager extends SQLiteOpenHelper{
         return id;
     }
 
-
-
-
-//    public Team getTeamByRemoteID(long remote_id){
-//
-//        Log.d(TAG, "getTeamByRemoteID");
-//        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-//
-//        Cursor cursor = null;
-//        Team team = null;
-//        try {
-//            String SELECT_QUERY = String.format("SELECT * FROM %s WHERE %s = %s",GameManagerConfigs.TABLE_TEAM,
-//                    GameManagerConfigs.TEAM_REMOTE_ID, remote_id);
-//            cursor = sqLiteDatabase.rawQuery(SELECT_QUERY, null);
-//
-//
-//            if(cursor.moveToFirst()){
-//                long id = cursor.getLong(cursor.getColumnIndex(GameManagerConfigs.TEAM_ID));
-//                String team_name = cursor.getString(cursor.getColumnIndex(GameManagerConfigs.TEAM_NAME));
-//                String team_colour = cursor.getString((cursor.getColumnIndex(GameManagerConfigs.TEAM_COLOUR)));
-//                long game_id = cursor.getLong(cursor.getColumnIndex(GameManagerConfigs.TEAM_GAME_ID));
-//
-//                team = new Team(id, game_id, remote_id, team_name, team_colour);
-//            }
-//        } catch (Exception e){
-//            Log.d(TAG,"Exception: " + e.getMessage());
-//            Toast.makeText(context, "Operation failed", Toast.LENGTH_SHORT).show();
-//        } finally {
-//            if(cursor!=null)
-//                cursor.close();
-//            sqLiteDatabase.close();
-//        }
-//        return team;
-//    }
 
 }
