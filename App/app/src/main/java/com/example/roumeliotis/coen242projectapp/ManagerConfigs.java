@@ -11,11 +11,17 @@ public class ManagerConfigs {
     public static final String USER_NAME_COLUMN = "name";
     public static final String USER_EMAIL_COLUMN = "email";
     public static final String USER_PASSWORD_COLUMN = "password";
+    public static final String USER_TOKEN_COLUMN = "token";
 
-    public static final String TABLE_DRINK = "DRINKS";
-    public static final String DRINK_REMOTE_ID = "remote_id";
-    public static final String DRINK_MIXER = "mixer";
-    public static final String DRINK_ALCOHOL = "alcohol";
-    public static final String DRINK_DOUBLE = "double";
-
+    public static final String TABLE_ORDER = "ORDERS";
+    public static final String ORDER_ID = "id";
+    public static final String ORDER_REMOTE_ID = "remote_id";
+    public static final String ORDER_KEY = "order_key";
+    public static final String ORDER_MACHINE_ID = "machine_id";
+    public static final String ORDER_MIXER_COLUMN = "mixer";
+    public static final String ORDER_ALCOHOL_COLUMN = "alcohol";
+    public static final String ORDER_DOUBLE_COLUMN = "double";
+    public static final String ORDER_PRICE_COLUMN = "price";
+    public static final String ORDER_STATE_COLUMN = "status";
+    public static final String ORDER_PAID_COLUMN = "paid";
 }
