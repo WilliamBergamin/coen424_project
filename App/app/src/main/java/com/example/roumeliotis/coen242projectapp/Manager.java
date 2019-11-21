@@ -24,9 +24,9 @@ public class Manager extends SQLiteOpenHelper{
 
         //Create User Table
         String CREATE_USER_TABLE = "CREATE TABLE " + ManagerConfigs.TABLE_USER + "(" +
-                ManagerConfigs.USER_REMOTE_ID + " INTEGER PRIMARY KEY NOT NULL UNIQUE, " +
+                ManagerConfigs.USER_ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ManagerConfigs.USER_NAME_COLUMN + " TEXT NOT NULL, " +
-                ManagerConfigs.USER_EMAIL_COLUMN + " TEXT NOT NULL, " +
+                ManagerConfigs.USER_EMAIL_COLUMN + " TEXT PRIMARY KEY NOT NULL UNIQUE, " +
                 ManagerConfigs.USER_PASSWORD_COLUMN + " TEXT NOT NULL," +
                 ManagerConfigs.USER_TOKEN_COLUMN + "TEXT NOT NULL)";
 
@@ -35,8 +35,8 @@ public class Manager extends SQLiteOpenHelper{
 
         // Create Order Table
         String CREATE_ORDER_TABLE = "CREATE TABLE " + ManagerConfigs.TABLE_ORDER + "(" +
-                ManagerConfigs.ORDER_ID + " INTEGER NOT NULL UNIQUE, " +
-                ManagerConfigs.ORDER_REMOTE_ID + " INTEGER PRIMARY KEY NOT NULL UNIQUE, " +
+                ManagerConfigs.ORDER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                ManagerConfigs.ORDER_REMOTE_ID + " INTEGER NOT NULL UNIQUE, " +
                 ManagerConfigs.ORDER_KEY + "INTEGER NOT NULL UNIQUE, " +
                 ManagerConfigs.ORDER_MACHINE_ID + "INTEGER NOT NULL UNIQUE, " +
                 ManagerConfigs.ORDER_MIXER_COLUMN + "TEXT NOT NULL," +
@@ -66,10 +66,10 @@ public class Manager extends SQLiteOpenHelper{
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ManagerConfigs.USER_REMOTE_ID, user.getRemote_id());
         contentValues.put(ManagerConfigs.USER_NAME_COLUMN, user.getName());
         contentValues.put(ManagerConfigs.USER_EMAIL_COLUMN, user.getEmail());
         contentValues.put(ManagerConfigs.USER_PASSWORD_COLUMN, user.getPassword());
+        contentValues.put(ManagerConfigs.USER_PASSWORD_COLUMN, user.getToken());
 
         try {
             id = sqLiteDatabase.replaceOrThrow(ManagerConfigs.TABLE_USER, null, contentValues);
@@ -92,7 +92,7 @@ public class Manager extends SQLiteOpenHelper{
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(ManagerConfigs.ORDER_ID, order.getId());
-        contentValues.put(ManagerConfigs.USER_REMOTE_ID, order.getRemote_id());
+//        contentValues.put(ManagerConfigs.USER_REMOTE_ID, order.getRemote_id());
         contentValues.put(ManagerConfigs.ORDER_KEY, order.getOrder_key());
         contentValues.put(ManagerConfigs.ORDER_MACHINE_ID, order.getMachine_id());
         contentValues.put(ManagerConfigs.ORDER_MIXER_COLUMN, order.getMixer());

@@ -7,7 +7,7 @@ public class ManagerConfigs {
     public static final String DATABASE_NAME = "USERS.db";
 
     public static final String TABLE_USER = "USERS";
-    public static final String USER_REMOTE_ID = "remote_id";
+    public static final String USER_ID_COLUMN = "id";
     public static final String USER_NAME_COLUMN = "name";
     public static final String USER_EMAIL_COLUMN = "email";
     public static final String USER_PASSWORD_COLUMN = "password";

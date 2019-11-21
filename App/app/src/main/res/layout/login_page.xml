@@ -58,7 +58,7 @@
             android:singleLine="true"
             android:textAlignment="center"
             android:textCursorDrawable="@null"
-            android:textSize="40dp" />
+            android:textSize="16dp" />
 
         <TextView
             android:id="@+id/password"
@@ -86,7 +86,7 @@
             android:singleLine="true"
             android:textAlignment="center"
             android:textCursorDrawable="@null"
-            android:textSize="40dp" />
+            android:textSize="16dp" />
 
         <Button
             android:id="@+id/loginButton"

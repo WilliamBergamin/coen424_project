@@ -24,14 +24,21 @@ public class EventRegistration extends AppCompatActivity {
         getEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(getEventCode.equals("")){
+                String event = getEventCode.getText().toString().trim();
+                if(event.equals("")){
                     // Error or empty field message
                 }
                 else{
                     // Get event here
-                    startActivity(new Intent(EventRegistration.this, CreateDrink.class));
+                    goToNextActivity();
                 }
             }
         });
+    }
+
+    void goToNextActivity() {
+        Intent intent = new Intent();
+        intent.setClass(EventRegistration.this, CreateDrink.class);
+        startActivity(intent);
     }
 }

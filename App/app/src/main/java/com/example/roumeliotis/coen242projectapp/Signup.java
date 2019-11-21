@@ -32,21 +32,36 @@ public class Signup extends AppCompatActivity{
         getLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Signup.this, Login.class));
+                goToLogin();
             }
         });
 
         getSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(getName.equals("") || getEmail.equals("") || getPassword.equals("")){
+                String name = getName.getText().toString().trim();
+                String email = getEmail.getText().toString().trim();
+                String password = getPassword.getText().toString().trim();
+                if(name.equals("") || email.equals("") || password.equals("")){
                     // Error or empty field message
                 }
                 else{
                     // login in here (serverhelper.java)
-                    startActivity(new Intent(Signup.this, EventRegistration.class));
+                    goToNextActivity();
                 }
             }
         });
+    }
+
+    void goToLogin() {
+        Intent intent = new Intent();
+        intent.setClass(Signup.this, Login.class);
+        startActivity(intent);
+    }
+
+    void goToNextActivity() {
+        Intent intent = new Intent();
+        intent.setClass(Signup.this, EventRegistration.class);
+        startActivity(intent);
     }
 }

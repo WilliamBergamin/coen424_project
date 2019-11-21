@@ -5,23 +5,26 @@ import android.os.Parcelable;
 
 public class User implements Parcelable{
 
-    private long remote_id = -1;     //ID in server database
+    private long id = -1;     //ID in server database
     private String name = null;     // Name of the user
     private String email = null;    // Email of the user
     private String password = null; // Password of the user
+    private String token = null; // token to make requests
 
-    public User(long remote_id, String name, String email, String password) {
-        this.remote_id = remote_id;
+    public User(long id, String name, String email, String password, String token) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.token = token;
     }
 
     protected User(Parcel in) {
-        remote_id = in.readLong();
+        id = in.readLong();
         name = in.readString();
         email = in.readString();
         password = in.readString();
+        token = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -38,11 +41,11 @@ public class User implements Parcelable{
 
 
     // Get and set remoteID
-    public long getRemote_id() {
-        return remote_id;
+    public long getid() {
+        return id;
     }
-    public void setRemote_id(long remote_id) {
-        this.remote_id = remote_id;
+    public void setid(long id) {
+        this.id = id;
     }
 
     // Get and set name
@@ -57,6 +60,10 @@ public class User implements Parcelable{
     public String getPassword(){ return password; }
     public void setPassword(String password){ this.password = password; }
 
+    // Get and set token
+    public String getToken(){ return token; }
+    public void setToken(String token){ this.token = token; }
+
     @Override
     public int describeContents() {
         return 0;
@@ -64,10 +71,11 @@ public class User implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(remote_id);
+        parcel.writeLong(id);
         parcel.writeString(name);
         parcel.writeString(email);
         parcel.writeString(password);
+        parcel.writeString(token);
     }
 
 

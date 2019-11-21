@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Create a custom drink and add it to your cart
-public abstract class CreateDrink extends Activity implements OnItemSelectedListener{
+public class CreateDrink extends Activity implements OnItemSelectedListener{
 
     private Spinner spinnerAlcohol;
     private Spinner spinnerMixer;
-    Button createDrinkButton = null;
+    Button payNowButton = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -57,7 +57,8 @@ public abstract class CreateDrink extends Activity implements OnItemSelectedList
         }
 
         // Create the official drink and add the order to the cart
-        createDrinkButton.setOnClickListener(new View.OnClickListener() {
+        payNowButton = findViewById(R.id.payNowButton);
+        payNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(spinnerAlcohol.equals("") || spinnerMixer.equals("")){
@@ -65,10 +66,16 @@ public abstract class CreateDrink extends Activity implements OnItemSelectedList
                 }
                 else{
                     // Add order to the cart
-                    startActivity(new Intent(CreateDrink.this, Cart.class));
+                    goToNextActivity();
                 }
             }
         });
+    }
+
+    void goToNextActivity() {
+        Intent intent = new Intent();
+        intent.setClass(CreateDrink.this, Orders.class);
+        startActivity(intent);
     }
 
     @Override

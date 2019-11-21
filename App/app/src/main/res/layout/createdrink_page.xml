@@ -87,7 +87,7 @@
             android:text="Double Alcohol" />
 
         <Button
-            android:id="@+id/addToCartButton"
+            android:id="@+id/payNowButton"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
@@ -95,7 +95,7 @@
             android:layout_marginBottom="80dp"
             android:background="@color/colorHotPink"
             android:elevation="0dp"
-            android:text="Add to Cart"
+            android:text="Pay Now"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="20dp" />
