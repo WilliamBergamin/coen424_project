@@ -54,7 +54,7 @@ class Order:
         }
         self._id = orders.insert_one(new_event).inserted_id
 
-    def append_drinks(self, drink):
+    def append_drink(self, drink):
         self.__drinks.append(drink)
         self.__price = sum([drink.price for drink in self.drinks])
 
@@ -93,7 +93,7 @@ class Order:
     @staticmethod
     def get_price_from_drinks(drinks):
         return sum([drink.price for drink in drinks])
-    
+
     @classmethod
     def find_by_id(cls, order_id):
         found_order_data = orders.find_one({"_id": ObjectId(order_id)})

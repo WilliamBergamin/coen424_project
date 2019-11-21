@@ -1,6 +1,6 @@
 
 class Drink:
-    
+
     """
     Attributes:
       swagger_types (dict): The key is attribute name

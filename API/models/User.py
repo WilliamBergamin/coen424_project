@@ -27,7 +27,7 @@ class User():
         'password': 'str',
         'admin': 'bool',
         'token': 'str',
-        'orders': 'str',
+        'orders': 'list',
     }
 
     attribute_map = {

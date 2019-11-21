@@ -103,15 +103,15 @@ def get_token():
     if request.content_type != JSON_MIME_TYPE:
         return json_error('Invalid Content Type', 'Invalid Content Type', 400)
     data = request.json
-    user = User.find(data['email'])
+    user = User.find(data.get('email', None))
     if user is None:
         return json_error('User was not founc with given email',
-                          "User not found", status=404)
-    user.get_token(data["password"])
+                          'The authentification failed', status=401)
+    user.get_token(data.get("password", None))
     user.save()
     if user.token is None:
         return json_error('The authentification failed',
-                          json.dumps(user.to_dict()), status=401)
+                          'The authentification failed', status=401)
     return json_response(json.dumps(user.to_dict()), status=200)
 
 

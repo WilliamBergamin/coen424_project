@@ -1,6 +1,6 @@
 import base64
 from bson.objectid import ObjectId
-from init import mongo_db, app
+from init import mongo_db
 
 events = mongo_db.events
 
@@ -22,7 +22,7 @@ class Event():
         '_id': 'ID',
         'name': 'str',
         'location': 'str',
-        'users': 'str',
+        'users': 'list',
         'new_orders': 'list',
         'pending_orders': 'list',
         'processed_orders': 'list',
