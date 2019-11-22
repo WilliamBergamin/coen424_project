@@ -30,6 +30,7 @@ public class Login extends AppCompatActivity{
     Button getLogin;
     Button getSignup;
     ServerHelper serverHelper;
+    Manager Manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class Login extends AppCompatActivity{
         getLogin = findViewById(R.id.loginButton);
         getSignup = findViewById(R.id.signup);
         serverHelper = new ServerHelper();
+        Manager = new Manager(this);
 
         getSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,9 +65,13 @@ public class Login extends AppCompatActivity{
                         @Override
                         public void onSuccess(JSONObject response) {
                             try {
-                                User logged_in_user = new
-
-                                goToNextActivity();
+                                User loggedInUser = new User(-1,
+                                                                response.getString("name"),
+                                                                response.getString("email"),
+                                                                "password",
+                                                                response.getString("token"));
+                                Manager.insertUser(loggedInUser);
+                                goToNextActivity(loggedInUser);
                             } catch(JSONException e){
                                 e.printStackTrace();
                                 Toast toast=Toast.makeText(getApplicationContext(),"Something went wrong",Toast.LENGTH_SHORT);
@@ -99,8 +105,9 @@ public class Login extends AppCompatActivity{
         startActivity(intent);
     }
 
-    void goToNextActivity() {
+    void goToNextActivity(User loggedInUser) {
         Intent intent = new Intent();
+        intent.putExtra("loggerInUser", loggedInUser);
         intent.setClass(Login.this, EventRegistration.class);
         startActivity(intent);
     }

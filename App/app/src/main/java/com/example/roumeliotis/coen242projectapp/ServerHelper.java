@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import static com.android.volley.Request.*;
+
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -39,7 +41,12 @@ public class ServerHelper {
             }
         });
 
-        Log.d(TAG, "Request: " + request.toString());
+        try {
+            Log.d(TAG, "Request: " + request.getHeaders() + request.toString());
+        } catch (AuthFailureError authFailureError) {
+            authFailureError.printStackTrace();
+            Log.d(TAG, "error");
+        }
 
         VolleySingleton.getInstance(context).addToQueue(request);
     }
