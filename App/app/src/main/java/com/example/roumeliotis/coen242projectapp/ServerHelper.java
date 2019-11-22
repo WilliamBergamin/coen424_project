@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class ServerHelper {
 
-    private static final String base_url = "http://127.0.0.1:80/";
+    private static final String base_url = "http://3.15.172.12:80/";
     public static final String TAG = "ServerHelper";
 
     // User login
