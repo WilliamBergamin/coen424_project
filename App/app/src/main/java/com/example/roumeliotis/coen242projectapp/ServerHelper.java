@@ -22,7 +22,7 @@ public class ServerHelper {
 
     // User login
     public void getToken(final String email, final String password, final Context context, final VolleyCallback callback){
-        JSONObject jsonRequest = new JSONObject();
+        final JSONObject jsonRequest = new JSONObject();
         try {
             jsonRequest.put("email", email);
             //TODO hash password
@@ -50,7 +50,11 @@ public class ServerHelper {
             }
         };
 
-        Log.d(TAG, "Request: " + request.getBody().toString() + request.toString());
+        for(int i=0; i<request.getBody().length; i++){
+            Log.d(TAG, "Body: " +Byte.toString(request.getBody()[i]));
+        }
+
+        Log.d(TAG, "Request: " + request.toString());
 
         VolleySingleton.getInstance(context).addToQueue(request);
     }

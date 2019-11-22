@@ -92,7 +92,7 @@ def post_user():
     return json_response(json.dumps(new_user.to_dict()), status=201)
 
 
-@app.route('/api/v1/user/token', methods=['GET'])
+@app.route('/api/v1/user/token', methods=['GET', 'POST'])
 def get_token():
     """
     {
