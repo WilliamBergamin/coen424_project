@@ -3,6 +3,7 @@ package com.example.roumeliotis.coen242projectapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,12 +55,11 @@ public class Login extends AppCompatActivity{
         getLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = getEmail.getText().toString().trim();
-                String password = getPassword.getText().toString().trim();
+                String email = getEmail.getText().toString();
+                String password = getPassword.getText().toString();
                 if(email.equals("") || password.equals("")){
                     // Error or empty field message
-                }
-                else{
+                }else{
                     // login in here (serverhelper.java)
                     serverHelper.getToken(email, password, getApplicationContext(),  new VolleyCallback() {
                         @Override
@@ -82,6 +82,7 @@ public class Login extends AppCompatActivity{
 
                         @Override
                         public void onError(VolleyError error) {
+                            Log.d("Login","FUNCKING ERROR");
                             LayoutInflater inflater = getLayoutInflater();
                             View layoutToast = inflater.inflate(R.layout.toast,
                                     (ViewGroup) findViewById(R.id.toast_layout));

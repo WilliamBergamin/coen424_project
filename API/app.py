@@ -100,6 +100,8 @@ def get_token():
       "password":"ur moms house"
     }
     """
+    app.logger.info(request.content_type)
+    app.logger.info(request.json)
     if request.content_type != JSON_MIME_TYPE:
         return json_error('Invalid Content Type', 'Invalid Content Type', 400)
     data = request.json

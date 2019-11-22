@@ -5,7 +5,6 @@ import android.util.Log;
 
 import static com.android.volley.Request.*;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -13,9 +12,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ServerHelper {
 
-    private static final String base_url = "http://3.15.172.12:80/";
+    private static final String base_url = "http://127.0.0.1:80/";
     public static final String TAG = "ServerHelper";
 
     // User login
@@ -28,7 +30,7 @@ public class ServerHelper {
         }catch (JSONException e) {
             e.printStackTrace();
         }
-        final JsonObjectRequest request = new JsonObjectRequest(Method.GET, base_url + "api/v1/user/token/", jsonRequest, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest request = new JsonObjectRequest(Method.GET, base_url + "api/v1/user/token", jsonRequest, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 callback.onSuccess(response);
@@ -36,17 +38,19 @@ public class ServerHelper {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, error.toString());
+                Log.d(TAG, "error caught:"+ error.toString());
                 callback.onError(error);
             }
-        });
+        }){ //no semicolon or coma this is to add headers
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+        };
 
-        try {
-            Log.d(TAG, "Request: " + request.getHeaders() + request.toString());
-        } catch (AuthFailureError authFailureError) {
-            authFailureError.printStackTrace();
-            Log.d(TAG, "error");
-        }
+        Log.d(TAG, "Request: " + request.getBody().toString() + request.toString());
 
         VolleySingleton.getInstance(context).addToQueue(request);
     }
