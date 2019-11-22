@@ -82,7 +82,6 @@ public class Login extends AppCompatActivity{
 
                         @Override
                         public void onError(VolleyError error) {
-                            Log.d("Login","FUNCKING ERROR");
                             LayoutInflater inflater = getLayoutInflater();
                             View layoutToast = inflater.inflate(R.layout.toast,
                                     (ViewGroup) findViewById(R.id.toast_layout));

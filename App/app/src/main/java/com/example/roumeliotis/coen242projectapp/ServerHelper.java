@@ -30,7 +30,7 @@ public class ServerHelper {
         }catch (JSONException e) {
             e.printStackTrace();
         }
-        final JsonObjectRequest request = new JsonObjectRequest(Method.GET, base_url + "api/v1/user/token", jsonRequest, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest request = new JsonObjectRequest(Method.POST, base_url + "api/v1/user/token", jsonRequest, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 callback.onSuccess(response);
@@ -49,10 +49,6 @@ public class ServerHelper {
                 return params;
             }
         };
-
-        for(int i=0; i<request.getBody().length; i++){
-            Log.d(TAG, "Body: " +Byte.toString(request.getBody()[i]));
-        }
 
         Log.d(TAG, "Request: " + request.toString());
 

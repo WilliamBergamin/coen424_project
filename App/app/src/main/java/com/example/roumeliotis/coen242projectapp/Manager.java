@@ -26,7 +26,7 @@ public class Manager extends SQLiteOpenHelper{
         String CREATE_USER_TABLE = "CREATE TABLE " + ManagerConfigs.TABLE_USER + "(" +
                 ManagerConfigs.USER_ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ManagerConfigs.USER_NAME_COLUMN + " TEXT NOT NULL, " +
-                ManagerConfigs.USER_EMAIL_COLUMN + " TEXT PRIMARY KEY NOT NULL UNIQUE, " +
+                ManagerConfigs.USER_EMAIL_COLUMN + " TEXT NOT NULL UNIQUE, " +
                 ManagerConfigs.USER_PASSWORD_COLUMN + " TEXT NOT NULL," +
                 ManagerConfigs.USER_TOKEN_COLUMN + "TEXT NOT NULL)";
 
