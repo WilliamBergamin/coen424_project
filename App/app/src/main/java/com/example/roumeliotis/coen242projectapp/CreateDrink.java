@@ -2,6 +2,8 @@ package com.example.roumeliotis.coen242projectapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBar;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -15,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Create a custom drink and add it to your cart
-public class CreateDrink extends Activity implements OnItemSelectedListener{
+public abstract class CreateDrink extends AppCompatActivity implements OnItemSelectedListener{
+        //Activity implements OnItemSelectedListener {
 
     private Spinner spinnerAlcohol;
     private Spinner spinnerMixer;
@@ -25,6 +28,9 @@ public class CreateDrink extends Activity implements OnItemSelectedListener{
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.createdrink_page);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("COEN 424");
 
         // Alcohol dropdown menu
         spinnerAlcohol = (Spinner) findViewById(R.id.alcoholDropdown);
@@ -78,17 +84,17 @@ public class CreateDrink extends Activity implements OnItemSelectedListener{
         startActivity(intent);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // TODO Auto-generated method stub
-        Toast.makeText(this, "YOUR SELECTION IS : " + parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        // TODO Auto-generated method stub
-
-    }
+//    @Override
+//    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//        // TODO Auto-generated method stub
+//        Toast.makeText(this, "YOUR SELECTION IS : " + parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+//    }
+//
+//    @Override
+//    public void onNothingSelected(AdapterView<?> parent) {
+//        // TODO Auto-generated method stub
+//
+//    }
 
 
 }

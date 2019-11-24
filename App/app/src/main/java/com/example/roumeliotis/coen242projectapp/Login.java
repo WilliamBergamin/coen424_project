@@ -2,8 +2,8 @@ package com.example.roumeliotis.coen242projectapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +12,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.VolleyError;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 
 // Log in to your account
@@ -37,6 +31,9 @@ public class Login extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("COEN424");
 
         getEmail = findViewById(R.id.emailInput);
         getPassword = findViewById(R.id.passwordInput);
@@ -58,7 +55,9 @@ public class Login extends AppCompatActivity{
                 String email = getEmail.getText().toString();
                 String password = getPassword.getText().toString();
                 if(email.equals("") || password.equals("")){
-                    // Error or empty field message
+                    Toast toast=Toast.makeText(getApplicationContext(),"Invalid input",Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
                 }else{
                     // login in here (serverhelper.java)
                     serverHelper.getToken(email, password, getApplicationContext(),  new VolleyCallback() {
@@ -111,4 +110,11 @@ public class Login extends AppCompatActivity{
         intent.setClass(Login.this, EventRegistration.class);
         startActivity(intent);
     }
+
+    // Testing purposes
+//    void goToNextActivity() {
+//        Intent intent = new Intent();
+//        intent.setClass(Login.this, EventRegistration.class);
+//        startActivity(intent);
+//    }
 }

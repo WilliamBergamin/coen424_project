@@ -59,6 +59,16 @@ public class ServerHelper {
 
     // Create new user
     public void postUser(final String name, final String email, final String password, final Context context, final VolleyCallback callback){
+        final JSONObject jsonRequest = new JSONObject();
+        try {
+            jsonRequest.put("name", name);
+            jsonRequest.put("email", email);
+            //TODO hash password
+            jsonRequest.put("password", password);
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         final JsonObjectRequest request = new JsonObjectRequest(Method.POST, base_url + "api/v1/user", null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -68,6 +78,7 @@ public class ServerHelper {
         , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "error caught:"+ error.toString());
                 callback.onError(error);
             }
         });
