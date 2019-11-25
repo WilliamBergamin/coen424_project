@@ -63,13 +63,12 @@ public class ServerHelper {
         try {
             jsonRequest.put("name", name);
             jsonRequest.put("email", email);
-            //TODO hash password
             jsonRequest.put("password", password);
         }catch (JSONException e) {
             e.printStackTrace();
         }
 
-        final JsonObjectRequest request = new JsonObjectRequest(Method.POST, base_url + "api/v1/user", null, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest request = new JsonObjectRequest(Method.POST, base_url + "api/v1/user", jsonRequest, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 callback.onSuccess(response);
@@ -81,7 +80,14 @@ public class ServerHelper {
                 Log.d(TAG, "error caught:"+ error.toString());
                 callback.onError(error);
             }
-        });
+        }){ //no semicolon or coma this is to add headers
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+        };
 
         Log.d(TAG, "request: " + request.toString());
 
@@ -91,6 +97,7 @@ public class ServerHelper {
 
     // Add User to Event
     public void postUserToEvent(final String eventCode, final Context context, final VolleyCallback callback){
+
         final JsonObjectRequest request = new JsonObjectRequest(Method.POST, base_url + "api/v1/user/event/" + eventCode, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -100,6 +107,7 @@ public class ServerHelper {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "error caught:"+ error.toString());
                 callback.onError(error);
             }
         });
