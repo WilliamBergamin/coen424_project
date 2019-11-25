@@ -77,6 +77,4 @@ public class User implements Parcelable{
         parcel.writeString(password);
         parcel.writeString(token);
     }
-
-
 }

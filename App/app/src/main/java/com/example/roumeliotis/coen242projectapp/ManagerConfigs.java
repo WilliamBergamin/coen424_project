@@ -24,4 +24,8 @@ public class ManagerConfigs {
     public static final String ORDER_PRICE_COLUMN = "price";
     public static final String ORDER_STATE_COLUMN = "status";
     public static final String ORDER_PAID_COLUMN = "paid";
+
+    public static final String TABLE_EVENTLIST = "EVENTLIST";
+    public static final String EVENT_USER_EMAIL = "email";
+    public static final String EVENT_KEY = "key";
 }

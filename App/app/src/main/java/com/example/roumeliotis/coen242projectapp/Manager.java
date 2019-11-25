@@ -41,13 +41,21 @@ public class Manager extends SQLiteOpenHelper{
                 ManagerConfigs.ORDER_MACHINE_ID + "INTEGER NOT NULL UNIQUE, " +
                 ManagerConfigs.ORDER_MIXER_COLUMN + "TEXT NOT NULL," +
                 ManagerConfigs.ORDER_ALCOHOL_COLUMN + "TEXT NOT NULL," +
-                ManagerConfigs.ORDER_DOUBLE_COLUMN + "TEXT NOT NULL, " +
+                ManagerConfigs.ORDER_DOUBLE_COLUMN + "BOOLEAN NOT NULL, " +
                 ManagerConfigs.ORDER_PRICE_COLUMN + "REAL NOT NULL, " +
                 ManagerConfigs.ORDER_STATE_COLUMN + "TEXT NOT NULL, " +
-                ManagerConfigs.ORDER_PAID_COLUMN + "TEXT NOT NULL)";
+                ManagerConfigs.ORDER_PAID_COLUMN + "BOOLEAN NOT NULL)";
 
         Log.d(TAG, CREATE_ORDER_TABLE);
         db.execSQL(CREATE_ORDER_TABLE);
+
+//        // Create event table
+//        String CREATE_EVENT_TABLE = "CREATE TABLE " + ManagerConfigs.TABLE_EVENTLIST + "(" +
+//                ManagerConfigs.EVENT_USER_EMAIL + "TEXT NOT NULL, " +
+//                ManagerConfigs.EVENT_KEY + "TEXT NOT NULL)";
+//
+//        Log.d(TAG, CREATE_EVENT_TABLE);
+//        db.execSQL(CREATE_EVENT_TABLE);
 
     }
 
@@ -61,9 +69,9 @@ public class Manager extends SQLiteOpenHelper{
     // Insert user
     public long insertUser(User user){
         Log.d(TAG, "insertUser");
-
         long id = -1;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL("DELETE FROM "+ ManagerConfigs.TABLE_USER);
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(ManagerConfigs.USER_NAME_COLUMN, user.getName());
@@ -114,11 +122,19 @@ public class Manager extends SQLiteOpenHelper{
         return id;
     }
 
-    // Set token
-
-    // Get token
-
-
-
+//    // Insert new event key
+//    public long insertEventKey(String event, String userEmail){
+//        Log.d(TAG, "insertEventKet");
+//        long id = -1;
+//        SQLiteDatabase sqlLiteDatabase = this.getWritableDatabase();
+//
+//        ContentValues contentValues = new ContentValues();
+//        contentValues.put(ManagerConfigs.EVENT_USER_EMAIL, userEmail);
+//        contentValues.put(ManagerConfigs.EVENT_KEY, event);
+//
+//        try{
+//
+//        }
+//    }
 
 }

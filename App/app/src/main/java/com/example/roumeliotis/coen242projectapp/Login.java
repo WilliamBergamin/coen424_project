@@ -54,7 +54,7 @@ public class Login extends AppCompatActivity{
             public void onClick(View v) {
                 String email = getEmail.getText().toString();
                 String password = getPassword.getText().toString();
-                if(email.equals("") || password.equals("")){
+                if(("").equals(email) || ("").equals(password)){
                     Toast toast=Toast.makeText(getApplicationContext(),"Invalid input",Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
@@ -106,15 +106,8 @@ public class Login extends AppCompatActivity{
 
     void goToNextActivity(User loggedInUser) {
         Intent intent = new Intent();
-        intent.putExtra("loggerInUser", loggedInUser);
+        intent.putExtra("loggedInUser", loggedInUser);
         intent.setClass(Login.this, EventRegistration.class);
         startActivity(intent);
     }
-
-    // Testing purposes
-//    void goToNextActivity() {
-//        Intent intent = new Intent();
-//        intent.setClass(Login.this, EventRegistration.class);
-//        startActivity(intent);
-//    }
 }

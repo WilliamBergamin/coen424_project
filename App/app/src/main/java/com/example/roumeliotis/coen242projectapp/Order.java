@@ -6,7 +6,6 @@ import android.os.Parcelable;
 public class Order implements Parcelable {
 
     private long id = -1;
-    private long remote_id = -1;            //ID in server database
     private String order_key = null;
     private String machine_id = null;
     private String mixer = null;            // Mixer type
@@ -14,12 +13,11 @@ public class Order implements Parcelable {
     private boolean doubleAlcohol = false;  // Double
     private double price = 0.0;
     private String state = null;
-    private String paid = null;
+    private boolean paid = false;
 
-    public Order(long id, long remote_id, String order_key, String machine_id, String mixer, String alcohol,
-                 boolean doubleAlcohol, double price, String state, String paid) {
+    public Order(long id, String order_key, String machine_id, String mixer, String alcohol,
+                 boolean doubleAlcohol, double price, String state, Boolean paid) {
         this.id = id;
-        this.remote_id = remote_id;
         this.order_key = order_key;
         this.machine_id = machine_id;
         this.mixer = mixer;
@@ -32,7 +30,6 @@ public class Order implements Parcelable {
 
     protected Order(Parcel in) {
         id = in.readLong();
-        remote_id = in.readLong();
         order_key = in.readString();
         machine_id = in.readString();
         mixer = in.readString();
@@ -40,7 +37,7 @@ public class Order implements Parcelable {
         doubleAlcohol = in.readByte() != 0;  //doubleAlcohol == true if byte != 0
         price = in.readDouble();
         state = in.readString();
-        paid = in.readString();
+        paid = in.readByte() != 0;  //paid == true if byte != 0
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {
@@ -55,14 +52,6 @@ public class Order implements Parcelable {
         }
     };
 
-
-    // Get and set remoteID
-    public long getRemote_id() {
-        return remote_id;
-    }
-    public void setRemote_id(long remote_id) {
-        this.remote_id = remote_id;
-    }
 
     // Get and set ID
     public long getId() { return id; }
@@ -97,8 +86,8 @@ public class Order implements Parcelable {
     public void setState(String state) { this.state = state; }
 
     // Get and set paid
-    public String getPaid() { return paid; }
-    public void setPaid(String paid) { this.paid = paid; }
+    public boolean getPaid() { return paid; }
+    public void setPaid(boolean paid) { this.paid = paid; }
 
 
     @Override
@@ -108,7 +97,6 @@ public class Order implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(remote_id);
         parcel.writeString(mixer);
         parcel.writeString(alcohol);
         parcel.writeByte((byte) (doubleAlcohol ? 1 : 0));     //if doubleAlcohol == true, byte == 1
