@@ -150,7 +150,7 @@
             android:layout_alignTop="@+id/alreadyhaveanaccount"
             android:layout_toEndOf="@+id/alreadyhaveanaccount"
             android:background="@color/background"
-            android:text="Sign Up!"
+            android:text="Login!"
             android:textColor="@color/colorHotPink"
             android:textSize="16dp"
             android:fontFamily="@font/montserrat_regular"/>

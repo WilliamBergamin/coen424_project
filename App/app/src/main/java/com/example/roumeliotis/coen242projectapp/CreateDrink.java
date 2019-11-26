@@ -1,5 +1,6 @@
 package com.example.roumeliotis.coen242projectapp;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -42,8 +43,7 @@ public class CreateDrink extends AppCompatActivity implements OnItemSelectedList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.createdrink_page);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("COEN 424");
+        getSupportActionBar().setTitle(R.string.app_name);
         serverHelper = new ServerHelper();
         Manager = new Manager(this);
         Intent userInfo = getIntent();

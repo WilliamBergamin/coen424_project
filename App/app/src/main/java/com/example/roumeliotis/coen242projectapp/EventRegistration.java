@@ -32,8 +32,7 @@ public class EventRegistration extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eventreg_page);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("COEN424");
+        getSupportActionBar().setTitle(R.string.app_name);
         serverHelper = new ServerHelper();
         Manager = new Manager(this);
         getEventCode = findViewById(R.id.eventCodeInput);

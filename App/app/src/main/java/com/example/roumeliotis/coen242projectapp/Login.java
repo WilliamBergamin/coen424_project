@@ -33,7 +33,7 @@ public class Login extends AppCompatActivity{
         setContentView(R.layout.login_page);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("COEN424");
+        actionBar.setTitle(R.string.app_name);
 
         getEmail = findViewById(R.id.emailInput);
         getPassword = findViewById(R.id.passwordInput);

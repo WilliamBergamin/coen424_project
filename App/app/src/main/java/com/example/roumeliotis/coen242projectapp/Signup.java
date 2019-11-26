@@ -33,8 +33,7 @@ public class Signup extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_page);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("COEN424");
+        getSupportActionBar().setTitle(R.string.app_name);
         serverHelper = new ServerHelper();
         Manager = new Manager(this);
         getName = findViewById(R.id.nameInput);

@@ -29,6 +29,7 @@ public class Orders extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.orders_page);
 
+        getSupportActionBar().setTitle(R.string.app_name);
         serverHelper = new ServerHelper();
         Manager = new Manager(this);
         Intent userInfo = getIntent();
@@ -37,9 +38,6 @@ public class Orders extends AppCompatActivity{
         backToOrder = findViewById(R.id.returnButton);
 
         ordersList = findViewById(R.id.orderCodesList);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("COEN 424");
 
         List<Order> orders = Manager.getOrdersByUserID(user.getid());
         List<String> order_keys = new ArrayList<String>();
