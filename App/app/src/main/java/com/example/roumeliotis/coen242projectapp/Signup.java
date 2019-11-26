@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 // Create an account with personal and payment information
