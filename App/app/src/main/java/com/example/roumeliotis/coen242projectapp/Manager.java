@@ -44,7 +44,7 @@ public class Manager extends SQLiteOpenHelper{
                 ManagerConfigs.USER_ID_ORDER + " INTEGER NOT NULL, " +
 //                ManagerConfigs.ORDER_REMOTE_ID + " INTEGER NOT NULL UNIQUE, " +
                 ManagerConfigs.ORDER_KEY + " INTEGER NOT NULL UNIQUE, " +
-                ManagerConfigs.ORDER_MACHINE_ID + " TEXT NOT NULL UNIQUE, " +
+                ManagerConfigs.ORDER_MACHINE_ID + " TEXT NOT NULL, " +
                 ManagerConfigs.ORDER_MIXER_COLUMN + " TEXT NOT NULL, " +
                 ManagerConfigs.ORDER_ALCOHOL_COLUMN + " TEXT NOT NULL, " +
                 ManagerConfigs.ORDER_DOUBLE_COLUMN + " BOOLEAN NOT NULL, " +
@@ -105,7 +105,7 @@ public class Manager extends SQLiteOpenHelper{
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ManagerConfigs.ORDER_ID, order.getId());
+//        contentValues.put(ManagerConfigs.ORDER_ID, order.getId());
 //        contentValues.put(ManagerConfigs.USER_REMOTE_ID, order.getRemote_id());
         contentValues.put(ManagerConfigs.USER_ID_ORDER, order.getUserId());
         contentValues.put(ManagerConfigs.ORDER_KEY, order.getOrder_key());
@@ -118,7 +118,8 @@ public class Manager extends SQLiteOpenHelper{
         contentValues.put(ManagerConfigs.ORDER_PAID_COLUMN, order.getPaid());
 
         try {
-            id = sqLiteDatabase.replaceOrThrow(ManagerConfigs.TABLE_ORDER, null, contentValues);
+            id = sqLiteDatabase.insertOrThrow(ManagerConfigs.TABLE_ORDER, null, contentValues);
+            Log.d(TAG, "New Order has been inserted by user: " +order.getUserId());
         } catch (SQLiteException e){
             Log.d(TAG,"Exception: " + e.getMessage());
             Toast.makeText(context, "Operation failed: " + e.getMessage(), Toast.LENGTH_LONG).show();

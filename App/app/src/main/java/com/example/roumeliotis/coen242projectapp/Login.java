@@ -69,7 +69,7 @@ public class Login extends AppCompatActivity{
                                                                 response.getString("email"),
                                                                 "password",
                                                                 response.getString("token"));
-                                Manager.insertUser(loggedInUser);
+                                loggedInUser.setid(Manager.insertUser(loggedInUser));
                                 goToNextActivity(loggedInUser);
                             } catch(JSONException e){
                                 e.printStackTrace();
