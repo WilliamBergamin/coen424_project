@@ -3,6 +3,7 @@ package com.example.roumeliotis.coen242projectapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ public class Orders extends AppCompatActivity{
     Manager Manager;
     String eventKey;
     User user;
+    Button orderButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +52,19 @@ public class Orders extends AppCompatActivity{
         List<Order> orders = Manager.getOrdersByUserID(user.getid());
         List<String> order_keys = new ArrayList<String>();
         for (int i = 0; i < orders.size(); i++) {
+            Log.d("Orders", orders.get(i).toString());
             order_keys.add(orders.get(i).getOrder_key());
         }
 
         ordersList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, order_keys));
+
+        orderButton = findViewById(R.id.returnButton);
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCreateDrink();
+            }
+        });
     }
 
     void goToCreateDrink() {

@@ -141,22 +141,22 @@ public class Manager extends SQLiteOpenHelper{
                     ManagerConfigs.USER_ID_ORDER, user_id);
             cursor = sqLiteDatabase.rawQuery(SELECT_QUERY, null);
 
+            Log.d(TAG, "There is " +cursor.getCount()+" orders found");
 
-            if(cursor.moveToFirst()){
-                do {
-                    long order_id = cursor.getLong(cursor.getColumnIndex(ManagerConfigs.ORDER_ID));
-                    String order_key = cursor.getString(cursor.getColumnIndex(ManagerConfigs.ORDER_KEY));
-                    String machine_id = cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_MACHINE_ID)));
-                    String mixer = cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_MIXER_COLUMN)));
-                    String alcohol = cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_ALCOHOL_COLUMN)));
-                    boolean doubleAlcohol = Boolean.getBoolean(cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_ALCOHOL_COLUMN))));
-                    double price = cursor.getDouble((cursor.getColumnIndex(ManagerConfigs.ORDER_PRICE_COLUMN)));
-                    String state = cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_STATE_COLUMN)));
-                    Boolean paid = Boolean.getBoolean(cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_PAID_COLUMN))));
+            while(cursor.moveToNext()){
+                long order_id = cursor.getLong(cursor.getColumnIndex(ManagerConfigs.ORDER_ID));
+                String order_key = cursor.getString(cursor.getColumnIndex(ManagerConfigs.ORDER_KEY));
+                String machine_id = cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_MACHINE_ID)));
+                String mixer = cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_MIXER_COLUMN)));
+                String alcohol = cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_ALCOHOL_COLUMN)));
+                boolean doubleAlcohol = Boolean.getBoolean(cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_ALCOHOL_COLUMN))));
+                double price = cursor.getDouble((cursor.getColumnIndex(ManagerConfigs.ORDER_PRICE_COLUMN)));
+                String state = cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_STATE_COLUMN)));
+                Boolean paid = Boolean.getBoolean(cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_PAID_COLUMN))));
 
-                    orders.add(new Order(order_id, user_id, order_key, machine_id, mixer, alcohol, doubleAlcohol, price, state, paid));
-                }while(cursor.moveToNext());
+                orders.add(new Order(order_id, user_id, order_key, machine_id, mixer, alcohol, doubleAlcohol, price, state, paid));
             }
+
         } catch (Exception e){
             Log.d(TAG,"Exception: " + e.getMessage());
             Toast.makeText(context, "Operation failed", Toast.LENGTH_SHORT).show();
