@@ -9,7 +9,7 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:id="@+id/drawer_layout"
-    android:background="#FFFFFF"
+    android:background="@color/background"
     tools:context=".Login">
 
     <RelativeLayout
@@ -24,13 +24,14 @@
             android:id="@+id/logintoyouraccount"
             android:layout_width="300dp"
             android:layout_height="50dp"
+            android:layout_marginTop="50dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:text="Log in to your account"
-            android:background="#FFFFFF"
-            android:elevation="0dp"
+            android:background="@color/background"
             android:textColor="@color/colorHotPink"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:fontFamily="@font/montserrat_black" />
 
         <TextView
             android:id="@+id/email"
@@ -39,12 +40,11 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="86dp"
-            android:background="#FFFFFF"
-            android:elevation="0dp"
+            android:background="@color/background"
             android:text="Email"
             android:textColor="@color/colorHotPink"
-            android:textSize="18dp" />
-
+            android:textSize="18dp"
+            android:fontFamily="@font/montserrat_regular" />
         <EditText
             android:id="@+id/emailInput"
             android:layout_width="300dp"
@@ -56,9 +56,9 @@
             android:inputType="text"
             android:maxLength="20"
             android:singleLine="true"
-            android:textAlignment="center"
             android:textCursorDrawable="@null"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:fontFamily="@font/montserrat_regular"/>
 
         <TextView
             android:id="@+id/password"
@@ -67,11 +67,11 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="214dp"
-            android:background="#FFFFFF"
-            android:elevation="0dp"
+            android:background="@color/background"
             android:text="Password"
             android:textColor="@color/colorHotPink"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:fontFamily="@font/montserrat_regular"/>
 
         <EditText
             android:id="@+id/passwordInput"
@@ -81,21 +81,23 @@
             android:layout_centerHorizontal="true"
             android:backgroundTint="@color/colorHotPink"
             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_1234567890@."
-            android:inputType="text"
             android:maxLength="20"
             android:singleLine="true"
-            android:textAlignment="center"
+            android:inputType="textPassword"
             android:textCursorDrawable="@null"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:fontFamily="@font/montserrat_regular"/>
 
         <Button
             android:id="@+id/loginButton"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:layout_above="@+id/donthaveanaccount"
             android:layout_centerHorizontal="true"
-            android:background="@color/colorHotPink"
-            android:elevation="0dp"
+            android:layout_above="@+id/donthaveanaccount"
+            android:layout_below="@id/passwordInput"
+            android:layout_marginTop="58dp"
+            android:background = "@drawable/roundedbutton"
+            android:fontFamily="@font/montserrat_regular"
             android:text="Log In"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
@@ -107,24 +109,23 @@
             android:layout_height="26dp"
             android:layout_alignParentBottom="true"
             android:layout_alignStart="@+id/logintoyouraccount"
-            android:layout_marginBottom="100dp"
-            android:background="#FFFFFF"
-            android:elevation="0dp"
+            android:layout_marginBottom="280dp"
+            android:background="@color/background"
             android:text="Don't have an account?"
-            android:textColor="@color/colorDarkGrey"
-            android:textSize="16dp" />
-
+            android:textColor="@color/colorPastelPink"
+            android:textSize="16dp"
+            android:fontFamily="@font/montserrat_regular"/>
         <Button
             android:id="@+id/signup"
             android:layout_width="75dp"
             android:layout_height="23dp"
             android:layout_alignTop="@+id/donthaveanaccount"
             android:layout_toEndOf="@+id/donthaveanaccount"
-            android:background="#FFFFFF"
-            android:elevation="0dp"
+            android:background="@color/background"
             android:text="Sign Up!"
             android:textColor="@color/colorHotPink"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:fontFamily="@font/montserrat_regular"/>
     </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>
