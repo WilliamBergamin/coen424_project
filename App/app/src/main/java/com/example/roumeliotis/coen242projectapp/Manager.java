@@ -2,11 +2,16 @@ package com.example.roumeliotis.coen242projectapp;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Manager extends SQLiteOpenHelper{
 
@@ -28,7 +33,7 @@ public class Manager extends SQLiteOpenHelper{
                 ManagerConfigs.USER_NAME_COLUMN + " TEXT NOT NULL, " +
                 ManagerConfigs.USER_EMAIL_COLUMN + " TEXT NOT NULL UNIQUE, " +
                 ManagerConfigs.USER_PASSWORD_COLUMN + " TEXT NOT NULL," +
-                ManagerConfigs.USER_TOKEN_COLUMN + "TEXT NOT NULL)";
+                ManagerConfigs.USER_TOKEN_COLUMN + " TEXT )";
 
         Log.d(TAG, CREATE_USER_TABLE);
         db.execSQL(CREATE_USER_TABLE);
@@ -36,15 +41,16 @@ public class Manager extends SQLiteOpenHelper{
         // Create Order Table
         String CREATE_ORDER_TABLE = "CREATE TABLE " + ManagerConfigs.TABLE_ORDER + "(" +
                 ManagerConfigs.ORDER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                ManagerConfigs.ORDER_REMOTE_ID + " INTEGER NOT NULL UNIQUE, " +
-                ManagerConfigs.ORDER_KEY + "INTEGER NOT NULL UNIQUE, " +
-                ManagerConfigs.ORDER_MACHINE_ID + "INTEGER NOT NULL UNIQUE, " +
-                ManagerConfigs.ORDER_MIXER_COLUMN + "TEXT NOT NULL," +
-                ManagerConfigs.ORDER_ALCOHOL_COLUMN + "TEXT NOT NULL," +
-                ManagerConfigs.ORDER_DOUBLE_COLUMN + "BOOLEAN NOT NULL, " +
-                ManagerConfigs.ORDER_PRICE_COLUMN + "REAL NOT NULL, " +
-                ManagerConfigs.ORDER_STATE_COLUMN + "TEXT NOT NULL, " +
-                ManagerConfigs.ORDER_PAID_COLUMN + "BOOLEAN NOT NULL)";
+                ManagerConfigs.USER_ID_ORDER + " INTEGER NOT NULL, " +
+//                ManagerConfigs.ORDER_REMOTE_ID + " INTEGER NOT NULL UNIQUE, " +
+                ManagerConfigs.ORDER_KEY + " INTEGER NOT NULL UNIQUE, " +
+                ManagerConfigs.ORDER_MACHINE_ID + " TEXT NOT NULL UNIQUE, " +
+                ManagerConfigs.ORDER_MIXER_COLUMN + " TEXT NOT NULL, " +
+                ManagerConfigs.ORDER_ALCOHOL_COLUMN + " TEXT NOT NULL, " +
+                ManagerConfigs.ORDER_DOUBLE_COLUMN + " BOOLEAN NOT NULL, " +
+                ManagerConfigs.ORDER_PRICE_COLUMN + " REAL NOT NULL, " +
+                ManagerConfigs.ORDER_STATE_COLUMN + " TEXT NOT NULL, " +
+                ManagerConfigs.ORDER_PAID_COLUMN + " BOOLEAN NOT NULL)";
 
         Log.d(TAG, CREATE_ORDER_TABLE);
         db.execSQL(CREATE_ORDER_TABLE);
@@ -101,6 +107,7 @@ public class Manager extends SQLiteOpenHelper{
         ContentValues contentValues = new ContentValues();
         contentValues.put(ManagerConfigs.ORDER_ID, order.getId());
 //        contentValues.put(ManagerConfigs.USER_REMOTE_ID, order.getRemote_id());
+        contentValues.put(ManagerConfigs.USER_ID_ORDER, order.getUserId());
         contentValues.put(ManagerConfigs.ORDER_KEY, order.getOrder_key());
         contentValues.put(ManagerConfigs.ORDER_MACHINE_ID, order.getMachine_id());
         contentValues.put(ManagerConfigs.ORDER_MIXER_COLUMN, order.getMixer());
@@ -121,6 +128,46 @@ public class Manager extends SQLiteOpenHelper{
         Log.d(TAG, "success");
         return id;
     }
+
+    public List<Order> getOrdersByUserID(long user_id){
+
+        Log.d(TAG, "getGameByID");
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        List<Order> orders = new ArrayList<>();
+        try {
+            String SELECT_QUERY = String.format("SELECT * FROM %s WHERE %s = %s",ManagerConfigs.TABLE_ORDER,
+                    ManagerConfigs.USER_ID_ORDER, user_id);
+            cursor = sqLiteDatabase.rawQuery(SELECT_QUERY, null);
+
+
+            if(cursor.moveToFirst()){
+                do {
+                    long order_id = cursor.getLong(cursor.getColumnIndex(ManagerConfigs.ORDER_ID));
+                    String order_key = cursor.getString(cursor.getColumnIndex(ManagerConfigs.ORDER_KEY));
+                    String machine_id = cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_MACHINE_ID)));
+                    String mixer = cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_MIXER_COLUMN)));
+                    String alcohol = cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_ALCOHOL_COLUMN)));
+                    boolean doubleAlcohol = Boolean.getBoolean(cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_ALCOHOL_COLUMN))));
+                    double price = cursor.getDouble((cursor.getColumnIndex(ManagerConfigs.ORDER_PRICE_COLUMN)));
+                    String state = cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_STATE_COLUMN)));
+                    Boolean paid = Boolean.getBoolean(cursor.getString((cursor.getColumnIndex(ManagerConfigs.ORDER_PAID_COLUMN))));
+
+                    orders.add(new Order(order_id, user_id, order_key, machine_id, mixer, alcohol, doubleAlcohol, price, state, paid));
+                }while(cursor.moveToNext());
+            }
+        } catch (Exception e){
+            Log.d(TAG,"Exception: " + e.getMessage());
+            Toast.makeText(context, "Operation failed", Toast.LENGTH_SHORT).show();
+        } finally {
+            if(cursor!=null)
+                cursor.close();
+            sqLiteDatabase.close();
+        }
+        return orders;
+    }
+
 
 //    // Insert new event key
 //    public long insertEventKey(String event, String userEmail){

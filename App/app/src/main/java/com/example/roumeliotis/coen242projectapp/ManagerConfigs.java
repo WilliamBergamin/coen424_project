@@ -15,6 +15,7 @@ public class ManagerConfigs {
 
     public static final String TABLE_ORDER = "ORDERS";
     public static final String ORDER_ID = "id";
+    public static final String USER_ID_ORDER = "user_id";
     public static final String ORDER_REMOTE_ID = "remote_id";
     public static final String ORDER_KEY = "order_key";
     public static final String ORDER_MACHINE_ID = "machine_id";

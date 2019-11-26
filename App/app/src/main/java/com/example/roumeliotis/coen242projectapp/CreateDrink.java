@@ -101,8 +101,9 @@ public class CreateDrink extends AppCompatActivity implements OnItemSelectedList
                         public void onSuccess(JSONObject response) {
                             try {
                                 Order newOrder = new Order(-1,
+                                        user.getid(),
                                         response.getString("order_key"),
-                                        response.getString("machine_id"),
+                                        "",
                                         response.getJSONArray("drinks").getJSONObject(0).getString("mixer_type"),
                                         response.getJSONArray("drinks").getJSONObject(0).getString("alcohol_type"),
                                         response.getJSONArray("drinks").getJSONObject(0).getBoolean("double"),

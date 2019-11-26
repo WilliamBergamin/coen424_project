@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.support.v7.app.ActionBar;
@@ -17,6 +18,9 @@ import com.android.volley.VolleyError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // View all of your orders to gain access to input code
 public class Orders extends AppCompatActivity{
@@ -43,33 +47,12 @@ public class Orders extends AppCompatActivity{
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("COEN 424");
 
-//        serverHelper.getUser(user.getToken(), getApplicationContext(),  new VolleyCallback() {
-//            @Override
-//            public void onSuccess(JSONObject response) {
-//                try {
-//
-//                } catch(JSONException e){
-//                    e.printStackTrace();
-//                    Toast toast=Toast.makeText(getApplicationContext(),"Something went wrong",Toast.LENGTH_SHORT);
-//                    toast.setGravity(Gravity.CENTER, 0, 0);
-//                    toast.show();
-//                }
-//            }
-//
-//            @Override
-//            public void onError(VolleyError error) {
-//                LayoutInflater inflater = getLayoutInflater();
-//                View layoutToast = inflater.inflate(R.layout.toast,
-//                        (ViewGroup) findViewById(R.id.toast_layout));
-//                TextView textToast = layoutToast.findViewById(R.id.toast_text);
-//                textToast.setText("Order not completed");
-//                Toast toastWrongName = new Toast(getApplicationContext());
-//                toastWrongName.setGravity(Gravity.CENTER, 0, 0);
-//                toastWrongName.setDuration(Toast.LENGTH_SHORT);
-//                toastWrongName.setView(layoutToast);
-//                toastWrongName.show();
-//            }
-//        });
+        List<Order> orders = Manager.getOrdersByUserID(user.getid());
+        List<String> order_keys = new ArrayList<String>();
+        for (int i = 0; i < orders.size(); i++) {
+            order_keys.add(orders.get(i).getOrder_key());
+        }
 
+        ordersList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, order_keys));
     }
 }

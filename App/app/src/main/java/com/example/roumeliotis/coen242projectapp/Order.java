@@ -6,6 +6,7 @@ import android.os.Parcelable;
 public class Order implements Parcelable {
 
     private long id = -1;
+    private long user_id = -1;
     private String order_key = null;
     private String machine_id = null;
     private String mixer = null;            // Mixer type
@@ -15,9 +16,10 @@ public class Order implements Parcelable {
     private String state = null;
     private boolean paid = false;
 
-    public Order(long id, String order_key, String machine_id, String mixer, String alcohol,
+    public Order(long id,Long user_id, String order_key, String machine_id, String mixer, String alcohol,
                  boolean doubleAlcohol, double price, String state, Boolean paid) {
         this.id = id;
+        this.user_id = user_id;
         this.order_key = order_key;
         this.machine_id = machine_id;
         this.mixer = mixer;
@@ -30,6 +32,7 @@ public class Order implements Parcelable {
 
     protected Order(Parcel in) {
         id = in.readLong();
+        user_id = in.readLong();
         order_key = in.readString();
         machine_id = in.readString();
         mixer = in.readString();
@@ -56,7 +59,9 @@ public class Order implements Parcelable {
     // Get and set ID
     public long getId() { return id; }
     public void setId(long id) { this.id = id; }
-
+    // Get and set user id
+    public long getUserId() { return user_id; }
+    public void setUserId(long id) { this.user_id = id; }
     // Get and set orderKey
     public String getOrder_key() { return order_key; }
     public void setOrder_key(String order_key) { this.order_key = order_key; }
