@@ -54,7 +54,7 @@
             android:backgroundTint="@color/colorHotPink"
             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_1234567890@."
             android:inputType="text"
-            android:maxLength="20"
+            android:maxLength="80"
             android:singleLine="true"
             android:textCursorDrawable="@null"
             android:textSize="16dp"
@@ -72,7 +72,6 @@
             android:textColor="@color/colorHotPink"
             android:textSize="18dp"
             android:fontFamily="@font/montserrat_regular"/>
-
         <EditText
             android:id="@+id/passwordInput"
             android:layout_width="300dp"
@@ -81,7 +80,7 @@
             android:layout_centerHorizontal="true"
             android:backgroundTint="@color/colorHotPink"
             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_1234567890@."
-            android:maxLength="20"
+            android:maxLength="80"
             android:singleLine="true"
             android:inputType="textPassword"
             android:textCursorDrawable="@null"
@@ -109,6 +108,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignStart="@+id/logintoyouraccount"
             android:background="@color/background"
+            android:layout_below="@id/loginButton"
             android:text="Don't have an account?"
             android:textColor="@color/colorPastelPink"
             android:textSize="16dp"
@@ -117,8 +117,8 @@
             android:id="@+id/signup"
             android:layout_width="75dp"
             android:layout_height="23dp"
-            android:layout_alignTop="@+id/donthaveanaccount"
             android:layout_toEndOf="@+id/donthaveanaccount"
+            android:layout_below="@id/loginButton"
             android:background="@color/background"
             android:text="Sign Up!"
             android:textColor="@color/colorHotPink"

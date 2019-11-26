@@ -82,9 +82,9 @@
             android:id="@+id/doubleCheckbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:layout_alignEnd="@+id/createyourdrink"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="330dp"
+            android:layout_below="@id/mixerDropdown"
             android:text="Double Alcohol"
             android:buttonTint="@color/colorHotPink"
             android:textColor="@color/colorHotPink"
@@ -94,15 +94,16 @@
             android:id="@+id/payNowButton"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
+            android:layout_marginTop="58dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="260dp"
+            android:layout_below="@id/doubleCheckbox"
             android:background = "@drawable/roundedbutton"
             android:text="Pay Now"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="20dp"
             android:fontFamily="@font/montserrat_regular"/>
+
 
     </RelativeLayout>
 
