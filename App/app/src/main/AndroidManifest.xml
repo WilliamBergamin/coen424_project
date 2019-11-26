@@ -44,8 +44,7 @@
             android:label="" />
         <activity
             android:name=".Orders"
-            android:label=""
-            android:parentActivityName=".CreateDrink" />
+            android:label="" />
     </application>
 
 </manifest>

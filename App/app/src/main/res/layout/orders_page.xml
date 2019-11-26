@@ -20,11 +20,23 @@
         android:paddingRight="16dp"
         android:paddingTop="16dp">
 
+        <Button
+            android:id="@+id/returnButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background = "@drawable/roundedbutton"
+            android:fontFamily="@font/montserrat_regular"
+            android:text="Order"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="15dp" />
+
         <TextView
             android:id="@+id/viewOrderHistory"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="55dp"
+            android:layout_below="@id/returnButton"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:text="View Order History"
@@ -37,6 +49,7 @@
             android:id="@+id/orderCodesList"
             android:layout_width="300dp"
             android:layout_height="500dp"
+            android:layout_below="@id/viewOrderHistory"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="86dp"
@@ -45,7 +58,6 @@
             android:textColor="@color/colorHotPink"
             android:textSize="18dp"
             android:fontFamily="@font/montserrat_regular"/>
-
 
     </RelativeLayout>
 

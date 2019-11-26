@@ -55,4 +55,12 @@ public class Orders extends AppCompatActivity{
 
         ordersList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, order_keys));
     }
+
+    void goToCreateDrink() {
+        Intent intent = new Intent();
+        intent.putExtra("user", user);
+        intent.putExtra("eventKey", eventKey);
+        intent.setClass(Orders.this, CreateDrink.class);
+        startActivity(intent);
+    }
 }
