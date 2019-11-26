@@ -53,6 +53,7 @@
             android:maxLength="80"
             android:singleLine="true"
             android:textCursorDrawable="@null"
+            android:textColor="#FFFFFF"
             android:textSize="16dp"
             android:fontFamily="@font/montserrat_regular"/>
 
