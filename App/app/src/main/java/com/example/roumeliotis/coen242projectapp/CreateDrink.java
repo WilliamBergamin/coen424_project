@@ -87,7 +87,7 @@ public class CreateDrink extends AppCompatActivity implements OnItemSelectedList
                 }
                 String alcohol = spinnerAlcohol.getSelectedItem().toString();
                 String mixer = spinnerMixer.getSelectedItem().toString();
-                if(("").equals(alcohol) || ("").equals(mixer)){
+                if(("").equals(alcohol) || ("").equals(mixer) || (("None").equals(alcohol) && ("None").equals(mixer))){
                     // Error message here for empty field
                     Toast toast=Toast.makeText(getApplicationContext(),"Invalid input",Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
