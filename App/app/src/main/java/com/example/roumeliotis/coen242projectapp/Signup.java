@@ -56,7 +56,8 @@ public class Signup extends AppCompatActivity{
                 String email = getEmail.getText().toString();
                 //TODO hash password
                 String password = getPassword.getText().toString();
-                if(("").equals(name) || ("").equals(email) || ("").equals(password)){
+                if(("").equals(name) || ("").equals(email) || ("").equals(password)
+                || !email.contains("@") || !email.contains(".com") || !email.contains(".ca")){
                     Toast toast=Toast.makeText(getApplicationContext(),"Invalid input",Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
