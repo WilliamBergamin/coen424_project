@@ -15,6 +15,7 @@ COPY uwsgi.ini uwsgi.ini
 COPY models models
 COPY init.py init.py
 COPY utils.py utils.py
+COPY SES_Custom_Handler.py SES_Custom_Handler.py
 COPY app.py app.py
 COPY requirements.txt requirements.txt
 RUN pip3 install --upgrade pip

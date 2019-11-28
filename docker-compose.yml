@@ -26,7 +26,11 @@ services:
     environment: 
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
+    env_file:
+      - ./API/.env
     restart: always
+    volumes:
+      - ./API/logs:/app/logs
     expose:
       - 8080
     networks:
