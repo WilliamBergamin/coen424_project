@@ -9,7 +9,7 @@ API is a powerful Restfull API that uses the flask framework, allows to manage u
   - [Table of Contents](#table-of-contents)
   - [Restful API](#restful-api)
     - [Create new Event](#create-new-event)
-    - [Cretae new User](#delete-new-user)
+    - [Create new User](#delete-new-user)
     - [User Login](#user-login)
     - [Get User](#get-user)
     - [Add User to Event](#add-user-to-event)
@@ -45,7 +45,7 @@ json = {
 
 [:top:](#table-of-contents)
 
-### Cretae new User
+### Create new User
 
 ```JSON
 POST /api/v1/user
