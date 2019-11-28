@@ -28,15 +28,14 @@ class SES_Custom_Handler(logging.Handler):
                               region_name=self.aws_region,
                               aws_access_key_id=self.aws_key,
                               aws_secret_access_key=self.aws_secret)
-        client.send_email(
-                            Destination={'ToAddresses': self.mailing_list},
-                            Message={
-                                'Body': {
-                                    'Html': {
-                                        'Data': self.html_body.format(
-                                                    trace=self.format(record)),
-                                    },
+        client.send_email(Destination={'ToAddresses': self.mailing_list},
+                          Message={
+                            'Body': {
+                                'Html': {
+                                    'Data': self.html_body.format(
+                                                trace=self.format(record)),
                                 },
-                                'Subject': {'Data': self.mail_subject},
                             },
-                            Source=self.mail_sender)
+                            'Subject': {'Data': self.mail_subject},
+                          },
+                          Source=self.mail_sender)
