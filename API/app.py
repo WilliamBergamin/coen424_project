@@ -42,7 +42,7 @@ def test():
     :return: Information about this application.
     :rtype: str
     """
-    return 'very AI, many Knowledge, much Cloud'
+    return 'Taste of Heaven project up and running! \n Made by William Bergamin & Constantina Roumeliotis'
 
 # ---------------------- EVENT END-POINTS ---------------------- #
 @app.route('/api/v1/event', methods=['POST'])
