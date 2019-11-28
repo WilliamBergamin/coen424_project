@@ -80,7 +80,7 @@
             android:layout_below="@+id/email"
             android:layout_centerHorizontal="true"
             android:backgroundTint="@color/colorHotPink"
-            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz -_1234567890@."
+            android:digits="abcdefghijklmnopqrstuvwxyz -_1234567890@."
             android:inputType="text"
             android:maxLength="80"
             android:singleLine="true"

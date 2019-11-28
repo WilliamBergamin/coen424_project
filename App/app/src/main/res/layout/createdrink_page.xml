@@ -98,7 +98,7 @@
             android:layout_centerHorizontal="true"
             android:layout_below="@id/doubleCheckbox"
             android:background = "@drawable/roundedbutton"
-            android:text="Pay Now"
+            android:text="Place Order"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="20dp"
