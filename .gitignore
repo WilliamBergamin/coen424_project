@@ -11,3 +11,4 @@ instance/
 .idea
 
 /database/db
+/API/logs
