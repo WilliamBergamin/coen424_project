@@ -12,6 +12,7 @@
     - [Android Phone Application](#android-phone-application)
     - [MongoDB](#mongodb)
   - [Deployment](#deployment)
+  - [Infrastucture Design Schematic](#infrastucture-design-schematic)
 
 ## Context
 
@@ -57,4 +58,4 @@ It is possible to deploy this project on a local machine. To do this you will ne
 
 ## Infrastucture Design Schematic
 
-![Infrastucture Design Schematic](docker-compose_AWS_diagram.png)
+![Infrastucture Design Schematic](docker_diagram.png)
