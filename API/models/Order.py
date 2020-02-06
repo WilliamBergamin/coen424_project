@@ -138,7 +138,7 @@ class Order:
     def to_dict(self):
         order_key_str = str(str(self._id)).encode('utf8')
         return {
-            'order_key': int.from_bytes(base64.urlsafe_b64encode(order_key_str), "little"),
+            'order_key': base64.urlsafe_b64encode(order_key_str).decode('utf8'),
             'user_id': str(self.user_id),
             'machine_id': str(self.machine_id),
             'state': self.state,
