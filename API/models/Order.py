@@ -1,7 +1,7 @@
 import base64
+import zlib
 from bson.objectid import ObjectId
 from bson.son import SON
-import zlib
 
 from .Drink import Drink
 from init import mongo_db, app
@@ -117,7 +117,7 @@ class Order:
 
     @classmethod
     def find(cls, order_key):
-        _id = base64.urlsafe_b64decode(zlib.decompress(order_key.encode('utf8'))).decode('utf8')
+        _id = base64.urlsafe_b64decode(zlib.decompress(order_key)).decode('utf8')
         found_order_data = orders.find_one({"_id": ObjectId(_id)})
         if found_order_data is None:
             return None
@@ -139,7 +139,7 @@ class Order:
     def to_dict(self):
         order_key_str = str(str(self._id)).encode('utf8')
         return {
-            'order_key': zlib.compress(base64.urlsafe_b64encode(order_key_str)).decode('utf8'),
+            'order_key': str(zlib.compress(base64.urlsafe_b64encode(order_key_str))),
             'user_id': str(self.user_id),
             'machine_id': str(self.machine_id),
             'state': self.state,
